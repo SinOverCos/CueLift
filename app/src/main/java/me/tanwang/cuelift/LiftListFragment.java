@@ -1,10 +1,12 @@
 package me.tanwang.cuelift;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +20,33 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
     public static final String TAG = "LiftListFragment";
 
     public static final int ID_LOAD_LIFTS = 0;
+
+    private LiftLiftFragmentCallbacks callbacks;
+
+    // Required for hosting activities
+    public interface LiftLiftFragmentCallbacks {
+        void onLiftSelected(Lift lift);
+    }
+
+    // see http://stackoverflow.com/questions/32083053/android-fragment-onattach-deprecated
+    @Override
+    public void onAttach(Context hostActivity) {
+        super.onAttach(hostActivity);
+        Log.i(TAG, "onAttach(Context) called");
+        callbacks = (LiftLiftFragmentCallbacks) hostActivity;
+        Log.i(TAG, "Callbacks added through onAttach(Context)");
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onAttach(Activity hostActivity) {
+        super.onAttach(hostActivity);
+        Log.i(TAG, "onAttach(Activity) called");
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            Log.i(TAG, "Callbacks added through onAttach(Activity)");
+            callbacks = (LiftLiftFragmentCallbacks) hostActivity;
+        }
+    }
 
     @Override
     public void onStart() {
@@ -42,15 +71,12 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        /*
         if (id == ID_LOAD_LIFTS) {
             return new LiftListCursorLoader(getActivity());
         } else {
             Log.e(TAG, "UNRECOGNIZED ID FOR LOAD REQUEST");
             return null;
         }
-        */
-        return new LiftListCursorLoader(getActivity());
     }
 
     @Override
