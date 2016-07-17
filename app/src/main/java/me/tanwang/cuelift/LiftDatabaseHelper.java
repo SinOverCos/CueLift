@@ -1,13 +1,15 @@
 package me.tanwang.cuelift;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class SetDatabaseHelper extends SQLiteOpenHelper {
+public class LiftDatabaseHelper extends SQLiteOpenHelper {
 
-    private static final String TAG = "SetDatabaseHelper";
+    private static final String TAG = "LiftDatabaseHelper";
 
     private static final String DB_NAME = "cuelift.sqlite";
     private static final int VERSION = 1;
@@ -16,7 +18,7 @@ public class SetDatabaseHelper extends SQLiteOpenHelper {
     private static final String LIFT_ID = "_id";
     private static final String LIFT_NAME = "displayName";
 
-    private static final String TABLE_SET = "set";
+    private static final String TABLE_SET = "liftSet";
     private static final String SET_DATE = "timestamp";
     private static final String SET_REPS = "reps";
     private static final String SET_WEIGHT = "weight";
@@ -26,8 +28,29 @@ public class SetDatabaseHelper extends SQLiteOpenHelper {
     private static final String CUE_HINT = "hint";
     private static final String CUE_LIFT_ID = "lift_id";
 
-    public SetDatabaseHelper(Context context) {
+    public LiftDatabaseHelper(Context context) {
         super(context, DB_NAME, null, VERSION);
+    }
+
+    public LiftCursor queryLifts() {
+        // select * from TABLE_LIFT order by name asc
+        Cursor wrapped = getReadableDatabase().query(TABLE_LIFT, null, null, null, null, null, LIFT_NAME + " asc");
+        return new LiftCursor(wrapped);
+    }
+
+    public static class LiftCursor extends CursorWrapper {
+
+        public LiftCursor(Cursor cursor) {
+            super(cursor);
+        }
+
+        public Lift getLift() {
+            if (isBeforeFirst() || isAfterLast()) { return null; }
+            Lift lift = new Lift();
+            lift.setId(getLong(getColumnIndex(LIFT_ID)));
+            lift.setDisplayName(getString(getColumnIndex(LIFT_NAME)));
+            return lift;
+        }
     }
 
     @Override
