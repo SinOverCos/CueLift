@@ -4,12 +4,33 @@ public class Lift {
 
     private static final String TAG = "Lift";
 
-    private String displayName;
     private long id;
+    private String displayName;
+    private int maxWeight;
+    private int maxVolume;
 
     public Lift() {
         id = -1;
         displayName = null;
+        maxWeight = 0;
+        maxVolume = 0;
+    }
+
+
+    public int getMaxWeight() {
+        return maxWeight;
+    }
+
+    public void setMaxWeight(int maxWeight) {
+        this.maxWeight = maxWeight;
+    }
+
+    public int getMaxVolume() {
+        return maxVolume;
+    }
+
+    public void setMaxVolume(int maxVolume) {
+        this.maxVolume = maxVolume;
     }
 
     public String getDisplayName() {

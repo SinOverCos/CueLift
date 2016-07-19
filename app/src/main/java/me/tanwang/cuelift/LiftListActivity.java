@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 public class LiftListActivity extends AppCompatActivity implements LiftListFragment.LiftLiftFragmentCallbacks {
 
+    private static final String TAG = "LiftListActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

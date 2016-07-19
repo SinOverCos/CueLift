@@ -22,6 +22,12 @@ public class LiftManager {
         return liftManager;
     }
 
+    /*** Lift ***/
+
+    public long insertLift(Lift lift) {
+        return databaseHelper.insertLift(lift);
+    }
+
     public LiftDatabaseHelper.LiftCursor queryLifts() {
         return databaseHelper.queryLifts();
     }

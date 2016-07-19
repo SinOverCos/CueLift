@@ -22,6 +22,7 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
     public static final int ID_LOAD_LIFTS = 0;
 
     private LiftLiftFragmentCallbacks callbacks;
+    private LiftManager liftManager;
 
     // Required for hosting activities
     public interface LiftLiftFragmentCallbacks {
@@ -59,12 +60,30 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         getLoaderManager().initLoader(ID_LOAD_LIFTS, null, this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+
+        liftManager = LiftManager.get(getActivity());
+
+        Lift benchPress = new Lift();
+        benchPress.setDisplayName("Bench Press");
+        benchPress.setMaxVolume(1085);
+        benchPress.setMaxWeight(185);
+
+        Lift deadLift = new Lift();
+        deadLift.setDisplayName("Dead Lift");
+        deadLift.setMaxVolume(2150);
+        deadLift.setMaxWeight(275);
+
+        liftManager.insertLift(benchPress);
+        liftManager.insertLift(deadLift);
+
+        getLoaderManager().restartLoader(ID_LOAD_LIFTS, null, this);
 
         return view;
     }
@@ -122,8 +141,13 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
         @Override
         public void bindView(View view, Context context, Cursor cursor) {
             Lift lift = liftCursor.getLift();
-            TextView textView = (TextView) view.findViewById(R.id.textview);
-            textView.setText(lift.toString());
+
+            TextView liftNameTextView = (TextView) view.findViewById(R.id.lift_name_text_view);
+            TextView liftDetailTextView = (TextView) view.findViewById(R.id.lift_detail_text_view);
+
+            liftNameTextView.setText(lift.getDisplayName());
+            String detail = String.format(getResources().getString(R.string.lift_detail), lift.getMaxWeight(), lift.getMaxVolume());
+            liftDetailTextView.setText(detail);
         }
     }
 }

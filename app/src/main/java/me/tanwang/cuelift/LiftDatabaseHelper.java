@@ -1,5 +1,6 @@
 package me.tanwang.cuelift;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
@@ -17,6 +18,8 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_LIFT = "lift";
     private static final String LIFT_ID = "_id";
     private static final String LIFT_NAME = "displayName";
+    private static final String LIFT_MAX_WEIGHT = "maxWeight";
+    private static final String LIFT_MAX_VOL = "maxVolume";
 
     private static final String TABLE_SET = "liftSet";
     private static final String SET_DATE = "timestamp";
@@ -30,6 +33,16 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
 
     public LiftDatabaseHelper(Context context) {
         super(context, DB_NAME, null, VERSION);
+    }
+
+
+
+    public long insertLift(Lift lift) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(LIFT_NAME, lift.getDisplayName());
+        contentValues.put(LIFT_MAX_WEIGHT, lift.getMaxWeight());
+        contentValues.put(LIFT_MAX_VOL, lift.getMaxVolume());
+        return getWritableDatabase().insert(TABLE_LIFT, null, contentValues);
     }
 
     public LiftCursor queryLifts() {
@@ -53,9 +66,13 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+
+
+    /*** DB STUFF ***/
+
     @Override
     public void onCreate(SQLiteDatabase database) {
-        String createLiftTableSql = "create table " + TABLE_LIFT + " (" + LIFT_ID + " integer primary key autoincrement, " + LIFT_NAME + " varchar(255))";
+        String createLiftTableSql = "create table " + TABLE_LIFT + " (" + LIFT_ID + " integer primary key autoincrement, " + LIFT_NAME + " varchar(255), " + LIFT_MAX_WEIGHT + " integer, " + LIFT_MAX_VOL + " integer)";
         String createSetTableSql = "create table " + TABLE_SET + " (" + SET_DATE + " integer, " + SET_REPS + " integer, " + SET_WEIGHT + " integer, " + SET_LIFT_ID + " integer references " + TABLE_LIFT + "(" + LIFT_ID + "))";
         String createCueTableSql = "create table " + TABLE_CUE + " (" + CUE_HINT + " varchar(255), " + CUE_LIFT_ID + " integer references " + TABLE_LIFT + "(" + LIFT_ID + "))";
         Log.i(TAG, "Creating DB: " + createLiftTableSql);
