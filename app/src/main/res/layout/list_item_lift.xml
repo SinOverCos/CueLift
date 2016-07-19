@@ -3,8 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="88dp"
     android:orientation="horizontal"
-    android:layout_marginLeft="@dimen/list_view_margin"
-    android:layout_marginRight="@dimen/list_view_margin">
+    android:paddingLeft="@dimen/list_view_margin"
+    android:paddingRight="@dimen/list_view_margin">
+
+    <!--
+    http://stackoverflow.com/a/16278769/3629654
+    if parent (container of LinearLayout) supplies margins, those are used instead
+    container will supply top and bottom but no left/right margin, so no margin shows up
+    use padding instead
+    -->
 
     <ImageButton
         android:id="@+id/lift_icon_image_button"

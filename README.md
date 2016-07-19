@@ -18,3 +18,4 @@ RunListActivity (RunListFragment)
 - Remove entries from any table
 - FAB adds new entry
 - Add proper empty list view
+- Change FAB colour

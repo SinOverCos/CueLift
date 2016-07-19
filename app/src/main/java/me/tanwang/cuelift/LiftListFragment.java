@@ -70,6 +70,7 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
 
         liftManager = LiftManager.get(getActivity());
 
+        /* Dummy Lifts to populate list
         Lift benchPress = new Lift();
         benchPress.setDisplayName("Bench Press");
         benchPress.setMaxVolume(1085);
@@ -84,6 +85,7 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
         liftManager.insertLift(deadLift);
 
         getLoaderManager().restartLoader(ID_LOAD_LIFTS, null, this);
+        //*/
 
         return view;
     }
