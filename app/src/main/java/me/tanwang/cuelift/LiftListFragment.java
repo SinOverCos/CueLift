@@ -50,6 +50,12 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        callbacks = null;
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         TextView emptyListTextView = (TextView) getActivity().getLayoutInflater().inflate(R.layout.view_empty_lift_list, getListView(), false);

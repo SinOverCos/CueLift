@@ -45,6 +45,11 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
         return getWritableDatabase().insert(TABLE_LIFT, null, contentValues);
     }
 
+    public LiftCursor getLift(long liftId) {
+        Cursor singleLiftCursor = getReadableDatabase().query(TABLE_LIFT, null, LIFT_ID + "=" + liftId, null, null, null, null, "1");
+        return new LiftCursor(singleLiftCursor);
+    }
+
     public LiftCursor queryLifts() {
         // select * from TABLE_LIFT order by name asc
         Cursor wrapped = getReadableDatabase().query(TABLE_LIFT, null, null, null, null, null, LIFT_NAME + " asc");

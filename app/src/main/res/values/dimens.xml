@@ -6,4 +6,6 @@
 
     <dimen name="list_view_margin">16dp</dimen>
     <dimen name="list_view_icon_side_len">56dp</dimen>
+
+    <dimen name="lift_fragment_margin">16dp</dimen>
 </resources>

@@ -28,6 +28,10 @@ public class LiftManager {
         return databaseHelper.insertLift(lift);
     }
 
+    public Lift getLift(long liftId) {
+        return databaseHelper.getLift(liftId).getLift();
+    }
+
     public LiftDatabaseHelper.LiftCursor queryLifts() {
         return databaseHelper.queryLifts();
     }

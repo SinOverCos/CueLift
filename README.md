@@ -19,3 +19,7 @@ RunListActivity (RunListFragment)
 - FAB adds new entry
 - Add proper empty list view
 - Change FAB colour
+- Change up the app colours
+- Support custom pictures for lifts
+- Gmail style listview (select using icons)
+- Round icons for lift pictures
