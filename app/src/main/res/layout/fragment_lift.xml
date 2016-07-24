@@ -15,71 +15,66 @@ Ideas:
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_marginLeft="@dimen/lift_fragment_margin"
             android:layout_marginRight="@dimen/lift_fragment_margin">
 
-            <ImageButton
-                android:id="@+id/lift_icon_image_button"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_fitness_center_black"
-                android:contentDescription="@string/lift_icon_description"/>
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/lift_fragment_margin"
+                android:layout_marginTop="@dimen/lift_fragment_margin">
 
-            <EditText
-                android:id="@+id/lift_name_edit_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="textCapCharacters" />
+                <ImageButton
+                    android:id="@+id/lift_icon_image_button"
+                    android:layout_width="@dimen/list_view_icon_side_len"
+                    android:layout_height="@dimen/list_view_icon_side_len"
+                    android:src="@drawable/ic_fitness_center_black"
+                    android:contentDescription="@string/lift_icon_description"/>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/lift_name_edit_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/lift_name"
+                        android:textSize="@dimen/lift_icon_title_size"
+                        android:text="@string/generic_title"
+                        android:focusable="false"
+                        android:singleLine="true"
+                        android:ellipsize="start"
+                        android:inputType="textCapCharacters" />
+
+                </android.support.design.widget.TextInputLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:text="@string/personal_records"
+                style="@style/ListSeparator" />
+
+            <TextView android:id="@+id/lift_pr_weight"
+                style="@style/LiftInfo"
+                android:text="@string/weight_pr"/>
+
+            <TextView android:id="@+id/lift_pr_volume"
+                style="@style/LiftInfo"
+                android:text="@string/volume_pr"/>
+
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="?android:listSeparatorTextViewStyle" />
-
-        <Button android:id="@+id/crime_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp" />
-
-        <CheckBox android:id="@+id/crime_solved"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp" />
-
-        <Button
-            android:id="@+id/crime_suspect_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"/>
-
-        <Button
-            android:id="@+id/crime_report_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp" />
-
-        <Button
-            android:id="@+id/crime_call_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="16dp"
-            android:layout_marginLeft="16dp" />
-
-    </LinearLayout>
+    </android.support.design.widget.CoordinatorLayout>
 </ScrollView>
 

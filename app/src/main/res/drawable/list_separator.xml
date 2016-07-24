@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <size android:width="350dp" android:height="1dp" />
+    <solid android:color="@color/emphasis"/>
+
+</shape>
+<!-- Can't vary the width so it'll look off on some devices. Damn listSeparatorTextViewStyle is private -->

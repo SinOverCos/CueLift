@@ -7,10 +7,21 @@
     <string name="generic_title">Generic Title</string>
     <string name="generic_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris lacinia purus ex. In tristique tempus pellentesque. Proin eu condimentum tellus, eget tempor ex. Ut leo sem, scelerisque sit amet dui vitae, sagittis placerat turpis. Sed sit amet vestibulum quam, vel luctus mi. Sed a orci non neque mollis laoreet. Fusce nulla tellus, placerat nec lectus ut, tempus posuere dolor.</string>
 
+    <string name="your_lifts">Your Lifts</string>
+
+    <!-- LiftListFragment -->
     <string name="lift_detail">PRW: %1$d, PRV: %2$d</string>
 
-    <string name="your_lifts">Your Lifts</string>
-    <string name="edit">Edit</string>
-
+    <!-- LiftFragment -->
     <string name="lift_icon_description">Icon of Lift</string>
+    <string name="lift_name">Lift Name</string>
+
+    <string name="personal_records">Personal Records</string>
+    <string name="weight_pr">Max Weight Lifted: %1$d</string>
+    <string name="volume_pr">Max Volume Lifted: %1$d</string>
+
+    <string name="lift_history">Lift History</string>
+
+    <string name="lift_cues">Lift Cues</string>
+
 </resources>

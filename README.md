@@ -23,3 +23,4 @@ RunListActivity (RunListFragment)
 - Support custom pictures for lifts
 - Gmail style listview (select using icons)
 - Round icons for lift pictures
+- Change ListSeparator's colour

@@ -22,4 +22,33 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <style name="LiftInfo">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_margin">@dimen/inner_margins</item>
+        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:textColor">black</item>
+        <item name="android:textSize">@dimen/lift_info_text_size</item>
+    </style>
+
+    <!--
+    FML... Unfortunately, you can't reference Widget.Holo.Light.TextView.ListSeparator as a parent of a custom style, because it's private.
+    http://stackoverflow.com/questions/10020466/android-4-0-sub-title-section-label-styling
+    -->
+    <style name="ListSeparator">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+
+        <item name="android:drawableBottom">@drawable/list_separator</item>
+        <item name="android:drawablePadding">@dimen/separator_drawable_padding</item>
+
+        <item name="android:layout_marginTop">@dimen/inner_margins</item>
+        <item name="android:paddingLeft">@dimen/inner_margins</item>
+        <item name="android:paddingBottom">@dimen/inner_margins</item>
+
+        <item name="android:textColor">@color/emphasis</item>
+        <item name="android:textSize">@dimen/separator_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

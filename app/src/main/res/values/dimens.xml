@@ -4,8 +4,14 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
 
+    <dimen name="separator_text_size">14sp</dimen>
+    <dimen name="separator_drawable_padding">4dp</dimen>
+
     <dimen name="list_view_margin">16dp</dimen>
     <dimen name="list_view_icon_side_len">56dp</dimen>
 
     <dimen name="lift_fragment_margin">16dp</dimen>
+    <dimen name="lift_icon_title_size">24sp</dimen>
+    <dimen name="inner_margins">8dp</dimen>
+    <dimen name="lift_info_text_size">16sp</dimen>
 </resources>
