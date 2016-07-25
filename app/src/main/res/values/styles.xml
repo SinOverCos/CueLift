@@ -31,6 +31,12 @@
         <item name="android:textSize">@dimen/lift_info_text_size</item>
     </style>
 
+    <style name="VerticalLinearLayout">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <!--
     FML... Unfortunately, you can't reference Widget.Holo.Light.TextView.ListSeparator as a parent of a custom style, because it's private.
     http://stackoverflow.com/questions/10020466/android-4-0-sub-title-section-label-styling

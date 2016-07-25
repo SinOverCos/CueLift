@@ -24,3 +24,5 @@ RunListActivity (RunListFragment)
 - Gmail style listview (select using icons)
 - Round icons for lift pictures
 - Change ListSeparator's colour
+- Lift history activity
+- Cue off one by one activity

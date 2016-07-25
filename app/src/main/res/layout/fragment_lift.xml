@@ -60,21 +60,78 @@ Ideas:
 
             </LinearLayout>
 
-            <TextView
-                android:text="@string/personal_records"
-                style="@style/ListSeparator" />
+            <LinearLayout android:id="@+id/pr_linear_layout"
+                style="@style/VerticalLinearLayout">
 
-            <TextView android:id="@+id/lift_pr_weight"
-                style="@style/LiftInfo"
-                android:text="@string/weight_pr"/>
+                <TextView
+                    android:text="@string/personal_records"
+                    style="@style/ListSeparator" />
 
-            <TextView android:id="@+id/lift_pr_volume"
-                style="@style/LiftInfo"
-                android:text="@string/volume_pr"/>
+                <TextView android:id="@+id/lift_pr_weight_text_view"
+                    style="@style/LiftInfo"
+                    android:text="@string/weight_pr"/>
 
+                <TextView android:id="@+id/lift_pr_volume_text_view"
+                    style="@style/LiftInfo"
+                    android:text="@string/volume_pr"/>
+
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/today_linear_layout"
+                style="@style/VerticalLinearLayout">
+
+                <TextView
+                    style="@style/ListSeparator"
+                    android:text="@string/todays_lifts"/>
+
+                <TableLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <!-- date, reps, weigth-->
+
+                    <TableRow>
+                        <TextView
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="date"/>
+                        <TextView
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="reps"/>
+                        <TextView
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="weight"/>
+                    </TableRow>
+
+                </TableLayout>
+
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/last_day_linear_layout"
+                style="@style/VerticalLinearLayout">
+
+                <TextView
+                    style="@style/ListSeparator"
+                    android:text="@string/last_days_lifts" />
+
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/cues_linear_layout"
+                style="@style/VerticalLinearLayout">
+
+                <TextView
+                    style="@style/ListSeparator"
+                    android:text="@string/lift_cues"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </android.support.design.widget.CoordinatorLayout>
+
+
+
 </ScrollView>
 
