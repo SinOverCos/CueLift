@@ -1,7 +1,7 @@
 package me.tanwang.cuelift;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +22,14 @@ public class LiftFragment extends Fragment {
 
     public interface LiftFragmentCallbacks {
         void onLiftUpdated(Lift lift);
+    }
+
+    public static LiftFragment newInstance(Lift lift) {
+        Bundle args = new Bundle();
+        args.putSerializable(Lift.LIFT_SERIALIZABLE_KEY, lift);
+        LiftFragment liftFragment = new LiftFragment();
+        liftFragment.setArguments(args);
+        return liftFragment;
     }
 
     // see http://stackoverflow.com/questions/32083053/android-fragment-onattach-deprecated
@@ -57,7 +65,8 @@ public class LiftFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lift, parent, false);
 
-
+        // TODO if today's lifts/last day's lifts don't exist, hide that section
+        // TODO if no lifts exist at all, hide the PR section
 
         return view;
     }

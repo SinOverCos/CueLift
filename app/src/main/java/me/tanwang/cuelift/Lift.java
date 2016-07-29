@@ -1,8 +1,12 @@
 package me.tanwang.cuelift;
 
-public class Lift {
+import java.io.Serializable;
+
+public class Lift implements Serializable {
 
     private static final String TAG = "Lift";
+
+    public static final String LIFT_SERIALIZABLE_KEY = "me.tanwang.cuelift.lift";
 
     private long id;
     private String displayName;

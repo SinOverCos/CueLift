@@ -26,3 +26,5 @@ RunListActivity (RunListFragment)
 - Change ListSeparator's colour
 - Lift history activity
 - Cue off one by one activity
+- Lift details page needs better text color
+- Change barbell icon color
