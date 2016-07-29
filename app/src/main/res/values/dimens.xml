@@ -14,4 +14,8 @@
     <dimen name="lift_icon_title_size">24sp</dimen>
     <dimen name="inner_margins">8dp</dimen>
     <dimen name="lift_info_text_size">16sp</dimen>
+
+    <dimen name="table_header_text_size">14sp</dimen>
+    <dimen name="table_header_separator">8dp</dimen>
+    <dimen name="mini_fab_margin">4dp</dimen>
 </resources>

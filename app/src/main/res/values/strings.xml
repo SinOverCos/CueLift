@@ -20,12 +20,17 @@
     <string name="weight_pr">Max Weight Lifted: %1$d</string>
     <string name="volume_pr">Max Volume Lifted: %1$d</string>
 
-    <string name="todays_lifts">Today's Lifts</string>
-    <string name="last_days_lifts">Last Day's Lifts</string>
+    <string name="todays_lifts">Today\'s Lifts</string>
+    <string name="last_days_lifts">Last Day\'s Lifts</string>
     <string name="date">Date</string>
     <string name="reps">Reps</string>
     <string name="weight">Weight</string>
 
     <string name="lift_cues">Lift Cues</string>
+    <string name="add_cue">Add Cue</string>
+
+    <string name="today">Today</string>
+    <string name="zero_reps">0 Reps</string>
+    <string name="zero_weight">0 lbs.</string>
 
 </resources>

@@ -117,10 +117,7 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
         setListAdapter(null);
     }
 
-    // http://stackoverflow.com/questions/31999869/why-cant-loaders-be-non-static-inner-classes
-    // this class must be static
-    // loaders are designed to survive configuration changes
-    // non-static inner class will contains implicit reference to containing instance, so will create memory leak
+    /*
     private static class LiftListCursorLoader extends SQLiteCursorLoader {
         public LiftListCursorLoader(Context context) {
             super(context);
@@ -131,6 +128,7 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
             return LiftManager.get(getContext()).queryLifts();
         }
     }
+    */
 
     private class LiftCursorAdapter extends CursorAdapter {
         private LiftDatabaseHelper.LiftCursor liftCursor;

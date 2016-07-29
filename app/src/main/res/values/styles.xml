@@ -27,7 +27,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_margin">@dimen/inner_margins</item>
         <item name="android:layout_marginTop">0dp</item>
-        <item name="android:textColor">black</item>
+        <item name="android:textColor">#000000</item>
         <item name="android:textSize">@dimen/lift_info_text_size</item>
     </style>
 
@@ -57,4 +57,53 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="LiftHistoryTableHeader">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/table_header_text_size</item>
+    </style>
+
+    <style name="LiftHistoryTableCell">
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PickerCell">
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/table_header_text_size</item>
+    </style>
+
 </resources>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
