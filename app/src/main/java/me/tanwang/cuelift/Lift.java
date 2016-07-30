@@ -20,6 +20,9 @@ public class Lift implements Serializable {
         maxVolume = 0;
     }
 
+    public String toString() {
+        return "LIFT " + getDisplayName() + ", PRW = " + getMaxWeight() + ", PRV = " + getMaxVolume() + ", ID = " + getId();
+    }
 
     public int getMaxWeight() {
         return maxWeight;

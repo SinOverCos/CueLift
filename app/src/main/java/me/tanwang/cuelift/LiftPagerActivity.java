@@ -28,6 +28,17 @@ public class LiftPagerActivity extends AppCompatActivity implements LiftFragment
         getLoaderManager().initLoader(LiftListFragment.ID_LOAD_LIFTS, null, this);
     }
 
+    public void updateLift() {
+        if (viewPager == null || viewPager.getAdapter() == null) {
+            Log.i(TAG, "viewPager or viewPager's adapter is null, probably not ready yet, so returning");
+            return;
+        }
+
+        FragmentStatePagerAdapter adapter = (FragmentStatePagerAdapter) viewPager.getAdapter();
+        LiftFragment fragment = (LiftFragment) adapter.getItem(viewPager.getCurrentItem());
+        fragment.updateLift();
+    }
+
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         if (id == LiftListFragment.ID_LOAD_LIFTS) {
@@ -36,6 +47,22 @@ public class LiftPagerActivity extends AppCompatActivity implements LiftFragment
             Log.e(TAG, "UNRECOGNIZED ID FOR LOAD REQUEST");
             return null;
         }
+    }
+
+    /*
+    @Override
+    public void onBackPressed() {
+        Log.i(TAG, "onBackPressed is calling updateLift");
+        updateLift();
+        super.onBackPressed();
+    }
+    */
+
+    @Override
+    public void onPause() {
+        Log.i(TAG, "onPause is calling updateLift");
+        updateLift();
+        super.onPause();
     }
 
     @Override

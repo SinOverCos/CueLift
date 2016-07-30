@@ -31,6 +31,7 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
         void onLiftSelected(Lift lift);
     }
 
+    /*
     // see http://stackoverflow.com/questions/32083053/android-fragment-onattach-deprecated
     @Override
     public void onAttach(Context hostActivity) {
@@ -39,16 +40,15 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
         callbacks = (LiftLiftFragmentCallbacks) hostActivity;
         Log.i(TAG, "Callbacks added through onAttach(Context)");
     }
+    */
 
     @Override
     @SuppressWarnings("deprecation")
     public void onAttach(Activity hostActivity) {
         super.onAttach(hostActivity);
         Log.i(TAG, "onAttach(Activity) called");
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            Log.i(TAG, "Callbacks added through onAttach(Activity)");
-            callbacks = (LiftLiftFragmentCallbacks) hostActivity;
-        }
+        Log.i(TAG, "Callbacks added through onAttach(Activity)");
+        callbacks = (LiftLiftFragmentCallbacks) hostActivity;
     }
 
     @Override
@@ -76,7 +76,7 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        liftManager = LiftManager.get(getActivity());
+        liftManager = LiftManager.get(getActivity().getApplicationContext());
 
         /* Dummy Lifts to populate list
         Lift benchPress = new Lift();

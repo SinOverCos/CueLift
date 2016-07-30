@@ -15,6 +15,6 @@ public class LiftListCursorLoader extends SQLiteCursorLoader {
 
     @Override
     protected Cursor loadCursor() {
-        return LiftManager.get(getContext()).queryLifts();
+        return LiftManager.get(getContext().getApplicationContext()).queryLifts();
     }
 }

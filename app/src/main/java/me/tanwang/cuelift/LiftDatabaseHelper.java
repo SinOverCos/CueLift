@@ -22,19 +22,20 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
     private static final String LIFT_MAX_VOL = "maxVolume";
 
     private static final String TABLE_SET = "liftSet";
+    private static final String SET_ID = "_id";
     private static final String SET_DATE = "timestamp";
     private static final String SET_REPS = "reps";
     private static final String SET_WEIGHT = "weight";
     private static final String SET_LIFT_ID = "lift_id";
 
     private static final String TABLE_CUE = "cue";
+    private static final String CUE_ID = "_id";
     private static final String CUE_HINT = "hint";
     private static final String CUE_LIFT_ID = "lift_id";
 
     public LiftDatabaseHelper(Context context) {
         super(context, DB_NAME, null, VERSION);
     }
-
 
 
     public long insertLift(Lift lift) {
@@ -48,6 +49,14 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
     public LiftCursor getLift(long liftId) {
         Cursor singleLiftCursor = getReadableDatabase().query(TABLE_LIFT, null, LIFT_ID + "=" + liftId, null, null, null, null, "1");
         return new LiftCursor(singleLiftCursor);
+    }
+
+    public int updateLift(Lift lift) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(LIFT_NAME, lift.getDisplayName());
+        contentValues.put(LIFT_MAX_WEIGHT, lift.getMaxWeight());
+        contentValues.put(LIFT_MAX_VOL, lift.getMaxVolume());
+        return getWritableDatabase().update(TABLE_LIFT, contentValues, "_id=" + lift.getId(), null);
     }
 
     public LiftCursor queryLifts() {
@@ -78,8 +87,8 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase database) {
         String createLiftTableSql = "create table " + TABLE_LIFT + " (" + LIFT_ID + " integer primary key autoincrement, " + LIFT_NAME + " varchar(255), " + LIFT_MAX_WEIGHT + " integer, " + LIFT_MAX_VOL + " integer)";
-        String createSetTableSql = "create table " + TABLE_SET + " (" + SET_DATE + " integer, " + SET_REPS + " integer, " + SET_WEIGHT + " integer, " + SET_LIFT_ID + " integer references " + TABLE_LIFT + "(" + LIFT_ID + "))";
-        String createCueTableSql = "create table " + TABLE_CUE + " (" + CUE_HINT + " varchar(255), " + CUE_LIFT_ID + " integer references " + TABLE_LIFT + "(" + LIFT_ID + "))";
+        String createSetTableSql = "create table " + TABLE_SET + " (" + SET_ID + " integer primary key autoincrement, " + SET_DATE + " integer, " + SET_REPS + " integer, " + SET_WEIGHT + " integer, " + SET_LIFT_ID + " integer references " + TABLE_LIFT + "(" + LIFT_ID + "))";
+        String createCueTableSql = "create table " + TABLE_CUE + " (" + CUE_ID + " integer primary key autoincrement, " + CUE_HINT + " varchar(255), " + CUE_LIFT_ID + " integer references " + TABLE_LIFT + "(" + LIFT_ID + "))";
         Log.i(TAG, "Creating DB: " + createLiftTableSql);
         Log.i(TAG, "Creating DB: " + createSetTableSql);
         Log.i(TAG, "Creating DB: " + createCueTableSql);

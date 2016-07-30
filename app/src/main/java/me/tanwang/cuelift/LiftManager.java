@@ -32,6 +32,10 @@ public class LiftManager {
         return databaseHelper.getLift(liftId).getLift();
     }
 
+    public int updateLift(Lift lift) {
+        return databaseHelper.updateLift(lift);
+    }
+
     public LiftDatabaseHelper.LiftCursor queryLifts() {
         return databaseHelper.queryLifts();
     }

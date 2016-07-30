@@ -32,7 +32,7 @@ public class LiftListActivity extends AppCompatActivity implements LiftListFragm
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(), "This brings up a pager with a fragment for the new lift", Toast.LENGTH_SHORT).show();
                 Lift newLift = new Lift();
-                LiftManager.get(LiftListActivity.this).insertLift(newLift);
+                newLift.setId(LiftManager.get(getApplicationContext()).insertLift(newLift));
                 refreshList();
                 Intent intent = new Intent(LiftListActivity.this, LiftPagerActivity.class);
                 intent.putExtra(Lift.EXTRA_LIFT, newLift);
@@ -43,6 +43,7 @@ public class LiftListActivity extends AppCompatActivity implements LiftListFragm
 
     @Override
     public void onLiftSelected(Lift lift) {
+        Log.i(TAG, lift.toString());
         Intent intent = new Intent(this, LiftPagerActivity.class);
         intent.putExtra(Lift.EXTRA_LIFT, lift);
         startActivity(intent);
