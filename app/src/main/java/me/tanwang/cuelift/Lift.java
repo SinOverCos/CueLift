@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class Lift implements Serializable {
 
-    private static final String TAG = "Lift";
+    public static final String EXTRA_LIFT = "com.tanwang.cuelift.lift";
 
-    public static final String LIFT_SERIALIZABLE_KEY = "me.tanwang.cuelift.lift";
+    private static final String TAG = "Lift";
 
     private long id;
     private String displayName;

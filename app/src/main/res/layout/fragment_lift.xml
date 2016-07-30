@@ -37,21 +37,22 @@ Ideas:
                     android:id="@+id/lift_icon_image_button"
                     android:layout_width="@dimen/list_view_icon_side_len"
                     android:layout_height="@dimen/list_view_icon_side_len"
+                    android:background="#00000000"
                     android:src="@drawable/ic_fitness_center_black"
                     android:contentDescription="@string/lift_icon_description"/>
 
                 <android.support.design.widget.TextInputLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/lift_name_edit_text"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/lift_name"
                         android:textSize="@dimen/lift_icon_title_size"
                         android:text="@string/generic_title"
-                        android:focusable="false"
                         android:singleLine="true"
                         android:ellipsize="start"
                         android:inputType="textCapCharacters" />

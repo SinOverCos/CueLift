@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:descendantFocusability="blocksDescendants"
     android:layout_width="match_parent"
     android:layout_height="88dp"
     android:orientation="horizontal"
@@ -20,7 +21,9 @@
         android:layout_marginTop="@dimen/list_view_margin"
         android:layout_marginBottom="@dimen/list_view_margin"
         android:padding="0dp"
+        android:background="#00000000"
         android:src="@drawable/ic_fitness_center_black"/>
+    <!-- FOCUSABLE IS FALSE - NEED TO FIGURE OUT MUTLI SELECT -->
 
     <RelativeLayout
         android:layout_width="wrap_content"

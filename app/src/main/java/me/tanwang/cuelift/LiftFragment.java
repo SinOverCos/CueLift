@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 public class LiftFragment extends Fragment {
 
     private static final String TAG = "LiftFragment";
-    public static final String EXTRA_LIFT_ID = "me.tanwang.cuelift.extra_lift_id";
 
     private LiftFragmentCallbacks callbacks;
 
@@ -26,7 +25,7 @@ public class LiftFragment extends Fragment {
 
     public static LiftFragment newInstance(Lift lift) {
         Bundle args = new Bundle();
-        args.putSerializable(Lift.LIFT_SERIALIZABLE_KEY, lift);
+        args.putSerializable(Lift.EXTRA_LIFT, lift);
         LiftFragment liftFragment = new LiftFragment();
         liftFragment.setArguments(args);
         return liftFragment;
@@ -57,8 +56,7 @@ public class LiftFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        long liftId = getArguments().getLong(EXTRA_LIFT_ID);
-        lift = LiftManager.get(getActivity()).getLift(liftId);
+        lift = (Lift) getArguments().getSerializable(Lift.EXTRA_LIFT);
     }
 
     @Override

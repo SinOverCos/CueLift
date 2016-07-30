@@ -16,21 +16,21 @@ public class LiftPagerActivity extends AppCompatActivity implements LiftFragment
     private ViewPager viewPager;
     private LiftDatabaseHelper.LiftCursor liftCursor;
 
-    private static final int ID_LOAD_LIFTS = 0;
     private static final String TAG = "LiftPagerActivity";
 
     public void onLiftUpdated(Lift lift) {
-        getLoaderManager().restartLoader(ID_LOAD_LIFTS, null, this);
+        getLoaderManager().restartLoader(LiftListFragment.ID_LOAD_LIFTS, null, this);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLoaderManager().initLoader(LiftListFragment.ID_LOAD_LIFTS, null, this);
     }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id == ID_LOAD_LIFTS) {
+        if (id == LiftListFragment.ID_LOAD_LIFTS) {
             return new LiftListCursorLoader(this);
         } else {
             Log.e(TAG, "UNRECOGNIZED ID FOR LOAD REQUEST");
@@ -44,7 +44,6 @@ public class LiftPagerActivity extends AppCompatActivity implements LiftFragment
         viewPager = new ViewPager(this);
         viewPager.setId(R.id.viewPager);
         setContentView(viewPager);
-
 
         liftCursor = (LiftDatabaseHelper.LiftCursor) cursor;
 
@@ -84,6 +83,14 @@ public class LiftPagerActivity extends AppCompatActivity implements LiftFragment
                 }
             }
         });
+
+        Lift currentLift = (Lift) getIntent().getSerializableExtra(Lift.EXTRA_LIFT);
+        for (liftCursor.moveToFirst(); !liftCursor.isAfterLast(); liftCursor.moveToNext()) {
+            if (liftCursor.getLift().getId() == currentLift.getId()) {
+                viewPager.setCurrentItem(liftCursor.getPosition());
+                break;
+            }
+        }
     }
 
     @Override

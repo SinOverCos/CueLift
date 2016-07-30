@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class LiftListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -23,6 +24,7 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
 
     private LiftLiftFragmentCallbacks callbacks;
     private LiftManager liftManager;
+    private LiftDatabaseHelper.LiftCursor liftCursor;
 
     // Required for hosting activities
     public interface LiftLiftFragmentCallbacks {
@@ -92,8 +94,15 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
 
         getLoaderManager().restartLoader(ID_LOAD_LIFTS, null, this);
         //*/
-
         return view;
+    }
+
+    @Override
+    public void onListItemClick(ListView listView, View view, int position, long id) {
+        // id is given by cursor adapter since table in db has "_id" column
+        Log.i(TAG, "Lift at position " + position + " selected with id = " + id);
+        liftCursor.moveToPosition(position);
+        callbacks.onLiftSelected(liftCursor.getLift());
     }
 
     @Override
@@ -108,7 +117,9 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        LiftCursorAdapter adapter = new LiftCursorAdapter(getActivity(), (LiftDatabaseHelper.LiftCursor) cursor);
+        if (liftCursor != null) liftCursor.close();
+        liftCursor = (LiftDatabaseHelper.LiftCursor) cursor;
+        LiftCursorAdapter adapter = new LiftCursorAdapter(getActivity(), liftCursor);
         setListAdapter(adapter);
     }
 
@@ -130,7 +141,7 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
     }
     */
 
-    private class LiftCursorAdapter extends CursorAdapter {
+    protected class LiftCursorAdapter extends CursorAdapter {
         private LiftDatabaseHelper.LiftCursor liftCursor;
 
         public LiftCursorAdapter(Context context, LiftDatabaseHelper.LiftCursor liftCursor) {

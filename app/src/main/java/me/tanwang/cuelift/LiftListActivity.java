@@ -1,5 +1,7 @@
 package me.tanwang.cuelift;
 
+import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -28,14 +30,27 @@ public class LiftListActivity extends AppCompatActivity implements LiftListFragm
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "This will bring up a pager with a fragment for the new lift", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "This brings up a pager with a fragment for the new lift", Toast.LENGTH_SHORT).show();
+                Lift newLift = new Lift();
+                LiftManager.get(LiftListActivity.this).insertLift(newLift);
+                refreshList();
+                Intent intent = new Intent(LiftListActivity.this, LiftPagerActivity.class);
+                intent.putExtra(Lift.EXTRA_LIFT, newLift);
+                startActivity(intent);
             }
         });
     }
 
     @Override
     public void onLiftSelected(Lift lift) {
-        Log.e(TAG, "Oh shit I haven't implemented this yet");
+        Intent intent = new Intent(this, LiftPagerActivity.class);
+        intent.putExtra(Lift.EXTRA_LIFT, lift);
+        startActivity(intent);
+    }
+
+    private void refreshList() {
+        LiftListFragment listFragment =  (LiftListFragment) getFragmentManager().findFragmentById(R.id.lift_list_lift_fragment);
+        listFragment.getLoaderManager().restartLoader(LiftListFragment.ID_LOAD_LIFTS, null, listFragment);
     }
 
     @Override
