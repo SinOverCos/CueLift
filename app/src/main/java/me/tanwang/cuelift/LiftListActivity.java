@@ -20,6 +20,7 @@ public class LiftListActivity extends AppCompatActivity implements LiftListFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lift_list);
+        setTitle(R.string.your_lifts);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 

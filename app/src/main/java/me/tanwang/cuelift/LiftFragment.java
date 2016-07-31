@@ -90,6 +90,7 @@ public class LiftFragment extends Fragment {
             }
         });
 
+        liftNameEditText.setText(lift.getDisplayName());
         liftNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -121,9 +122,6 @@ public class LiftFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Log.i(TAG, "Saving current state...");
-                updateLift();
-                Log.i(TAG, "Going up one level");
                 NavUtils.navigateUpFromSameTask(getActivity());
                 return true;
 
@@ -132,9 +130,15 @@ public class LiftFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onPause() {
+        Log.i(TAG, "LiftFragment onPause is calling updateLift");
+        updateLift();
+        super.onPause();
+    }
+
     public void updateLift() {
-        //if (lift == null) Log.e(TAG, "lift IS NULL");
-        //LiftManager.get(getActivity().getApplicationContext()).updateLift(lift);
+        LiftManager.get(getActivity().getApplicationContext()).updateLift(lift);
     }
 }
 

@@ -49,22 +49,6 @@ public class LiftPagerActivity extends AppCompatActivity implements LiftFragment
         }
     }
 
-    /*
-    @Override
-    public void onBackPressed() {
-        Log.i(TAG, "onBackPressed is calling updateLift");
-        updateLift();
-        super.onBackPressed();
-    }
-    */
-
-    @Override
-    public void onPause() {
-        Log.i(TAG, "onPause is calling updateLift");
-        updateLift();
-        super.onPause();
-    }
-
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
 

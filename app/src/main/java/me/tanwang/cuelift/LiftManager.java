@@ -1,6 +1,7 @@
 package me.tanwang.cuelift;
 
 import android.content.Context;
+import android.util.Log;
 
 public class LiftManager {
 
@@ -33,6 +34,7 @@ public class LiftManager {
     }
 
     public int updateLift(Lift lift) {
+        Log.e(TAG, "LiftManager is updating lift " + lift);
         return databaseHelper.updateLift(lift);
     }
 
