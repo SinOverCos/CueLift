@@ -41,4 +41,10 @@ public class LiftManager {
     public LiftDatabaseHelper.LiftCursor queryLifts() {
         return databaseHelper.queryLifts();
     }
+
+    /*** Cue ***/
+
+    public long insertCue(Cue cue) {
+        return databaseHelper.insertCue(cue);
+    }
 }

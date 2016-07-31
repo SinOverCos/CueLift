@@ -1,6 +1,7 @@
 package me.tanwang.cuelift;
 
 import android.app.Activity;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Build;
@@ -25,10 +26,12 @@ public class LiftFragment extends Fragment {
     private static final String TAG = "LiftFragment";
 
     private LiftFragmentCallbacks callbacks;
+    private LiftManager liftManager;
 
     private ImageButton liftIconImageButton;
     private EditText liftNameEditText;
     private EditText addCueEditText;
+    private FloatingActionButton addCueFab;
 
     private Lift lift;
     // TODO list the stuff in fragment_lift here
@@ -63,6 +66,7 @@ public class LiftFragment extends Fragment {
         Log.i(TAG, "onAttach(Activity) called");
         Log.i(TAG, "Callbacks added through onAttach(Activity)");
         callbacks = (LiftFragmentCallbacks) hostActivity;
+        liftManager = LiftManager.get(hostActivity.getApplicationContext());
     }
 
     @Override
@@ -81,6 +85,7 @@ public class LiftFragment extends Fragment {
         liftIconImageButton = (ImageButton) view.findViewById(R.id.lift_icon_image_button);
         liftNameEditText = (EditText) view.findViewById(R.id.lift_name_edit_text);
         addCueEditText = (EditText) view.findViewById(R.id.add_cue_edit_text);
+        addCueFab = (FloatingActionButton) view.findViewById(R.id.add_cue_fab);
 
         liftIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,6 +109,13 @@ public class LiftFragment extends Fragment {
             public void afterTextChanged(Editable s) {}
         });
 
+        addCueFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String cue = addCueEditText.getText().toString();
+
+            }
+        });
 
 
         // TODO if today's lifts/last day's lifts don't exist, hide that section
@@ -138,7 +150,7 @@ public class LiftFragment extends Fragment {
     }
 
     public void updateLift() {
-        LiftManager.get(getActivity().getApplicationContext()).updateLift(lift);
+        liftManager.updateLift(lift);
     }
 }
 

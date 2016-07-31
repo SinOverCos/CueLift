@@ -29,5 +29,3 @@ RunListActivity (RunListFragment)
 - Lift details page needs better text color
 - Change barbell icon color
 - [Change EditText colours](http://stackoverflow.com/questions/26574328/changing-edittext-bottom-line-color-with-appcompat-v7)
-- Fix image button grey background
-- Sort lifts by alpha order

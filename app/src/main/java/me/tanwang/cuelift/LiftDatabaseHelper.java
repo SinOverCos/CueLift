@@ -37,6 +37,7 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
         super(context, DB_NAME, null, VERSION);
     }
 
+    /*** LIFT ***/
 
     public long insertLift(Lift lift) {
         ContentValues contentValues = new ContentValues();
@@ -80,6 +81,48 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /*** CUE ***/
+
+    public long insertCue(Cue cue) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CUE_HINT, cue.getCue());
+        contentValues.put(CUE_LIFT_ID, cue.getLiftId());
+        return getWritableDatabase().insert(TABLE_CUE, null, contentValues);
+    }
+
+    public CueCursor getCue(long cueId) {
+        Cursor singleCueCursor = getReadableDatabase().query(TABLE_CUE, null, CUE_ID + "=" + cueId, null, null, null, null, "1");
+        return new CueCursor(singleCueCursor);
+    }
+
+    public int updateCue(Cue cue) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(CUE_HINT, cue.getCue());
+        contentValues.put(CUE_LIFT_ID, cue.getLiftId());
+        return getWritableDatabase().update(TABLE_CUE, contentValues, "_id=" + cue.getId(), null);
+    }
+
+    public LiftCursor queryLifts() {
+        // select * from TABLE_LIFT order by name asc
+        Cursor wrapped = getReadableDatabase().query(TABLE_LIFT, null, null, null, null, null, LIFT_NAME + " asc");
+        return new LiftCursor(wrapped);
+    }
+
+    public static class CueCursor extends CursorWrapper {
+
+        public CueCursor(Cursor cursor) {
+            super(cursor);
+        }
+
+        public Cue getCue() {
+            if (isBeforeFirst() || isAfterLast()) { return null; }
+            Cue cue = new Cue();
+            cue.setId(getLong(getColumnIndex(CUE_ID)));
+            cue.setCue(getString(getColumnIndex(CUE_HINT)));
+            cue.setLiftId(getLong(getColumnIndex(CUE_LIFT_ID)));
+            return cue;
+        }
+    }
 
 
     /*** DB STUFF ***/

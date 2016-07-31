@@ -62,13 +62,13 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getLoaderManager().initLoader(ID_LOAD_LIFTS, null, this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-        getLoaderManager().initLoader(ID_LOAD_LIFTS, null, this);
+        getLoaderManager().restartLoader(ID_LOAD_LIFTS, null, this);
     }
 
     @Override
