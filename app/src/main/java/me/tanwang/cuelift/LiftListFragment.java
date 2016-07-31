@@ -52,12 +52,6 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        callbacks = null;
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         TextView emptyListTextView = (TextView) getActivity().getLayoutInflater().inflate(R.layout.view_empty_lift_list, getListView(), false);
@@ -68,6 +62,11 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         getLoaderManager().initLoader(ID_LOAD_LIFTS, null, this);
     }
@@ -128,19 +127,6 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
         setListAdapter(null);
     }
 
-    /*
-    private static class LiftListCursorLoader extends SQLiteCursorLoader {
-        public LiftListCursorLoader(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected Cursor loadCursor() {
-            return LiftManager.get(getContext()).queryLifts();
-        }
-    }
-    */
-
     protected class LiftCursorAdapter extends CursorAdapter {
         private LiftDatabaseHelper.LiftCursor liftCursor;
 
@@ -166,5 +152,11 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
             String detail = String.format(getResources().getString(R.string.lift_detail), lift.getMaxWeight(), lift.getMaxVolume());
             liftDetailTextView.setText(detail);
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        callbacks = null;
     }
 }
