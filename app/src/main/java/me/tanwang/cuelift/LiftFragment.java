@@ -85,9 +85,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        Log.i(TAG, "LiftFragment#onCreate called");
         lift = (Lift) getArguments().getSerializable(Lift.EXTRA_LIFT);
-        loadCues();
     }
 
     @Override
@@ -130,12 +128,11 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
                 addCueEditText.setText("");
                 addCueEditText.clearFocus();
                 liftManager.insertCue(cue);
-                Bundle args = new Bundle();
-                args.putLong(CUE_LIFT_ID, lift.getId());
-                getLoaderManager().restartLoader(ID_LOAD_CUES, args, LiftFragment.this);
+                reloadCues();
             }
         });
 
+        loadCues();
 
         // TODO if today's lifts/last day's lifts don't exist, hide that section
         // TODO if no lifts exist at all, hide the PR section
@@ -154,6 +151,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
 
     public void loadCues() {
         Log.i(TAG, "LiftFragment#loadCues called");
+        cueLinearLayout.removeAllViews();
         Bundle args = new Bundle();
         args.putLong(CUE_LIFT_ID, lift.getId());
         getLoaderManager().initLoader(ID_LOAD_CUES, args, this);
@@ -161,6 +159,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
 
     public void reloadCues() {
         Log.i(TAG, "LiftFragment#reloadCues called");
+        cueLinearLayout.removeAllViews();
         Bundle args = new Bundle();
         args.putLong(CUE_LIFT_ID, lift.getId());
         getLoaderManager().restartLoader(ID_LOAD_CUES, args, this);
@@ -216,24 +215,23 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         // counting on cursor starting before the first row
         while(cueCursor.moveToNext()) {
             LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            LinearLayout cueItem = (LinearLayout) inflater.inflate(R.layout.list_item_cue, cueLinearLayout, false);
+            final LinearLayout cueItem = (LinearLayout) inflater.inflate(R.layout.list_item_cue, cueLinearLayout, false);
 
-            final TextView cueTextView = (TextView) cueItem.findViewById(R.id.cue_text_text_view);
+            TextView cueTextView = (TextView) cueItem.findViewById(R.id.cue_text_text_view);
             cueTextView.setText(cueCursor.getCue().getCue());
-            cueTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int index = cueLinearLayout.indexOfChild((LinearLayout) cueTextView.getParent());
-                    Toast.makeText(getActivity().getApplicationContext(), "(TEXTVIEW) INDEX: " + index, Toast.LENGTH_SHORT).show();
-                }
-            });
 
             final ImageButton deleteCueImageButton = (ImageButton) cueItem.findViewById(R.id.delete_cue_button);
             deleteCueImageButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int index = cueLinearLayout.indexOfChild((LinearLayout) deleteCueImageButton.getParent());
-                    Toast.makeText(getActivity().getApplicationContext(), "(IMAGEBUTTON) INDEX: " + index, Toast.LENGTH_SHORT).show();
+                    cueCursor.moveToPosition(index);
+                    if (cueCursor.isBeforeFirst() || cueCursor.isAfterLast()) {
+                        Toast.makeText(getActivity().getApplicationContext(), R.string.cannot_delete_cue, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    liftManager.deleteCue(cueCursor.getCue());
+                    reloadCues();
                 }
             });
 

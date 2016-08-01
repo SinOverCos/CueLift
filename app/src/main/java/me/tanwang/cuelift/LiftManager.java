@@ -55,6 +55,10 @@ public class LiftManager {
         return databaseHelper.updateCue(cue);
     }
 
+    public int deleteCue(Cue cue) {
+        return databaseHelper.deleteCue(cue);
+    }
+
     public LiftDatabaseHelper.CueCursor queryCues(long liftId) {
         return databaseHelper.queryCues(liftId);
     }

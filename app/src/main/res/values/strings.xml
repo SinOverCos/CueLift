@@ -28,6 +28,7 @@
 
     <string name="lift_cues">Lift Cues</string>
     <string name="add_cue">Add Cue (Limit 255 Chars)</string>
+    <string name="cannot_delete_cue">Cannot delete this cue - this app is broken :(</string>
 
     <string name="today">Today</string>
     <string name="zero_reps">0 Reps</string>

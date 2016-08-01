@@ -102,6 +102,10 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
         return getWritableDatabase().update(TABLE_CUE, contentValues, "_id=" + cue.getId(), null);
     }
 
+    public int deleteCue(Cue cue) {
+        return getWritableDatabase().delete(TABLE_CUE, "_id=?", new String[] { String.valueOf(cue.getId()) });
+    }
+
     public CueCursor queryCues(long liftId) {
         // select * from TABLE_CUE WHERE CUE_LIFT_ID=liftId order by CUE_ID asc
         Cursor wrapped = getReadableDatabase().query(TABLE_CUE, null, CUE_LIFT_ID + "=" + liftId, null, null, null, CUE_HINT + " asc");
