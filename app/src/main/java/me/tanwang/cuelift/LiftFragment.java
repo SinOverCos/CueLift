@@ -22,6 +22,8 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +38,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     private LiftManager liftManager;
     private LiftDatabaseHelper.CueCursor cueCursor;
 
-    private ListView cueListView;
+    private LinearLayout cueLinearLayout;
 
     private ImageButton liftIconImageButton;
     private EditText liftNameEditText;
@@ -92,7 +94,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lift, parent, false);
 
-        cueListView = (ListView) view.findViewById(R.id.cue_list);
+        cueLinearLayout = (LinearLayout) view.findViewById(R.id.cue_list);
         liftIconImageButton = (ImageButton) view.findViewById(R.id.lift_icon_image_button);
         liftNameEditText = (EditText) view.findViewById(R.id.lift_name_edit_text);
         addCueEditText = (EditText) view.findViewById(R.id.add_cue_edit_text);
@@ -124,6 +126,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
             @Override
             public void onClick(View v) {
                 Cue cue = new Cue(addCueEditText.getText().toString(), lift.getId());
+                if (cue.getCue().equals("")) return;
                 addCueEditText.setText("");
                 addCueEditText.clearFocus();
                 liftManager.insertCue(cue);
@@ -209,20 +212,38 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         if (cueCursor != null) cueCursor.close();
         cueCursor = (LiftDatabaseHelper.CueCursor) cursor;
         Log.i(TAG, "Loaded " + cueCursor.getCount() + " cues");
-        CueCursorAdapter adapter = new CueCursorAdapter(getActivity(), cueCursor);
-        cueListView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                v.getParent().requestDisallowInterceptTouchEvent(true);
-                return false;
-            }
-        });
-        cueListView.setAdapter(adapter);
+
+        // counting on cursor starting before the first row
+        while(cueCursor.moveToNext()) {
+            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LinearLayout cueItem = (LinearLayout) inflater.inflate(R.layout.list_item_cue, cueLinearLayout, false);
+
+            final TextView cueTextView = (TextView) cueItem.findViewById(R.id.cue_text_text_view);
+            cueTextView.setText(cueCursor.getCue().getCue());
+            cueTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int index = cueLinearLayout.indexOfChild((LinearLayout) cueTextView.getParent());
+                    Toast.makeText(getActivity().getApplicationContext(), "(TEXTVIEW) INDEX: " + index, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            final ImageButton deleteCueImageButton = (ImageButton) cueItem.findViewById(R.id.delete_cue_button);
+            deleteCueImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int index = cueLinearLayout.indexOfChild((LinearLayout) deleteCueImageButton.getParent());
+                    Toast.makeText(getActivity().getApplicationContext(), "(IMAGEBUTTON) INDEX: " + index, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            cueLinearLayout.addView(cueItem);
+        }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        cueListView.setAdapter(null);
+        cueLinearLayout.removeAllViews();
     }
 
     private class CueCursorAdapter extends CursorAdapter {

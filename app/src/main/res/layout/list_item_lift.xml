@@ -21,7 +21,7 @@
         android:layout_marginTop="@dimen/list_view_margin"
         android:layout_marginBottom="@dimen/list_view_margin"
         android:padding="0dp"
-        android:background="#00000000"
+        android:background="@color/transparent"
         android:src="@drawable/ic_fitness_center_black"/>
     <!-- FOCUSABLE IS FALSE - NEED TO FIGURE OUT MUTLI SELECT -->
 

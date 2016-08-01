@@ -18,4 +18,6 @@
     <dimen name="table_header_text_size">14sp</dimen>
     <dimen name="table_header_separator">8dp</dimen>
     <dimen name="mini_fab_margin">4dp</dimen>
+
+    <dimen name="cue_list_spacer">4dp</dimen>
 </resources>

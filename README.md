@@ -29,3 +29,5 @@ RunListActivity (RunListFragment)
 - Lift details page needs better text color
 - Change barbell icon color
 - [Change EditText colours](http://stackoverflow.com/questions/26574328/changing-edittext-bottom-line-color-with-appcompat-v7)
+- graph/display all past sets
+- adjust cue trash/text colours

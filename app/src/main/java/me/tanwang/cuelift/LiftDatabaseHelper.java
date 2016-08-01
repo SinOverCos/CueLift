@@ -104,7 +104,7 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
 
     public CueCursor queryCues(long liftId) {
         // select * from TABLE_CUE WHERE CUE_LIFT_ID=liftId order by CUE_ID asc
-        Cursor wrapped = getReadableDatabase().query(TABLE_CUE, null, CUE_LIFT_ID + "=" + liftId, null, null, null, CUE_ID + " asc");
+        Cursor wrapped = getReadableDatabase().query(TABLE_CUE, null, CUE_LIFT_ID + "=" + liftId, null, null, null, CUE_HINT + " asc");
         return new CueCursor(wrapped);
     }
 

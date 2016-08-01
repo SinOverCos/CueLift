@@ -27,7 +27,7 @@
     <string name="weight">Weight</string>
 
     <string name="lift_cues">Lift Cues</string>
-    <string name="add_cue">Add Cue (Limit 255)</string>
+    <string name="add_cue">Add Cue (Limit 255 Chars)</string>
 
     <string name="today">Today</string>
     <string name="zero_reps">0 Reps</string>

@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".LiftPagerActivity">
+        <activity android:name=".LiftPagerActivity"
+            android:windowSoftInputMode="adjustNothing">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LiftListActivity">
             </meta-data>
