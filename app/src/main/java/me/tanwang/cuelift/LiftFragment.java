@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
@@ -81,19 +82,17 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setHasOptionsMenu(true);
-
+        Log.i(TAG, "LiftFragment#onCreate called");
         lift = (Lift) getArguments().getSerializable(Lift.EXTRA_LIFT);
-        Bundle args = new Bundle();
-        args.putLong(CUE_LIFT_ID, lift.getId());
-        //getLoaderManager().initLoader(ID_LOAD_CUES, args, this);
+        loadCues();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lift, parent, false);
 
+        cueListView = (ListView) view.findViewById(R.id.cue_list);
         liftIconImageButton = (ImageButton) view.findViewById(R.id.lift_icon_image_button);
         liftNameEditText = (EditText) view.findViewById(R.id.lift_name_edit_text);
         addCueEditText = (EditText) view.findViewById(R.id.add_cue_edit_text);
@@ -137,6 +136,29 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         // TODO if no lifts exist at all, hide the PR section
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i(TAG, "LiftFragment#onResume called");
+        if (getUserVisibleHint()) {
+            reloadCues();
+        }
+    }
+
+    public void loadCues() {
+        Log.i(TAG, "LiftFragment#loadCues called");
+        Bundle args = new Bundle();
+        args.putLong(CUE_LIFT_ID, lift.getId());
+        getLoaderManager().initLoader(ID_LOAD_CUES, args, this);
+    }
+
+    public void reloadCues() {
+        Log.i(TAG, "LiftFragment#reloadCues called");
+        Bundle args = new Bundle();
+        args.putLong(CUE_LIFT_ID, lift.getId());
+        getLoaderManager().restartLoader(ID_LOAD_CUES, args, this);
     }
 
     @Override
@@ -184,9 +206,16 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         if (cueCursor != null) cueCursor.close();
         cueCursor = (LiftDatabaseHelper.CueCursor) cursor;
-        CueCursorAdapter adapter = new CueCursorAdapter(getActivity(), cueCursor);
-        cueListView.setAdapter(adapter);
         Log.i(TAG, "Loaded " + cueCursor.getCount() + " cues");
+        CueCursorAdapter adapter = new CueCursorAdapter(getActivity(), cueCursor);
+        cueListView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+        cueListView.setAdapter(adapter);
     }
 
     @Override

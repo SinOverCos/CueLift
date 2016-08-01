@@ -1,13 +1,10 @@
 package me.tanwang.cuelift;
 
-//import android.support.v4.app.FragmentManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.LoaderManager;
 import android.content.Loader;
 import android.database.Cursor;
-//import android.support.v4.app.Fragment;
-//import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +15,8 @@ public class LiftPagerActivity extends AppCompatActivity implements LiftFragment
 
     private ViewPager viewPager;
     private LiftDatabaseHelper.LiftCursor liftCursor;
+    private LiftPagerAdapter adapter;
+
 
     private static final String TAG = "LiftPagerActivity";
 
@@ -62,23 +61,8 @@ public class LiftPagerActivity extends AppCompatActivity implements LiftFragment
         liftCursor = (LiftDatabaseHelper.LiftCursor) cursor;
 
         FragmentManager fragmentManager = getFragmentManager();
-        viewPager.setAdapter(new FragmentStatePagerAdapter(fragmentManager) {
-            @Override
-            public Fragment getItem(int position) {
-                if(liftCursor.moveToPosition(position)) {
-                    Lift lift = liftCursor.getLift();
-                    return LiftFragment.newInstance(lift);
-                } else {
-                    Log.e(TAG, "(FragmentStatePagerAdapter) Cursor moved out of bounds to" + position);
-                    return null;
-                }
-            }
-
-            @Override
-            public int getCount() {
-                return liftCursor.getCount();
-            }
-        });
+        adapter = new LiftPagerAdapter(fragmentManager);
+        viewPager.setAdapter(adapter);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -109,4 +93,27 @@ public class LiftPagerActivity extends AppCompatActivity implements LiftFragment
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {}
+
+    private class LiftPagerAdapter extends FragmentStatePagerAdapter {
+        public LiftPagerAdapter(FragmentManager fragmentManager) {
+            super(fragmentManager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            if(liftCursor.moveToPosition(position)) {
+                Lift lift = liftCursor.getLift();
+                LiftFragment liftFragment = LiftFragment.newInstance(lift);
+                return liftFragment;
+            } else {
+                Log.e(TAG, "(FragmentStatePagerAdapter) Cursor moved out of bounds to" + position);
+                return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return liftCursor.getCount();
+        }
+    }
 }
