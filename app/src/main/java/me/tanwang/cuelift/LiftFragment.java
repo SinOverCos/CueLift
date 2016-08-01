@@ -1,17 +1,14 @@
 package me.tanwang.cuelift;
 
 import android.app.Activity;
-//import android.app.Fragment;
-//import android.app.LoaderManager;
+import android.app.Fragment;
+import android.app.LoaderManager;
 import android.content.Context;
-//import android.content.Loader;
+import android.content.Loader;
 import android.database.Cursor;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -90,7 +87,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         lift = (Lift) getArguments().getSerializable(Lift.EXTRA_LIFT);
         Bundle args = new Bundle();
         args.putLong(CUE_LIFT_ID, lift.getId());
-        getLoaderManager().initLoader(ID_LOAD_CUES, args, this);
+        //getLoaderManager().initLoader(ID_LOAD_CUES, args, this);
     }
 
     @Override
