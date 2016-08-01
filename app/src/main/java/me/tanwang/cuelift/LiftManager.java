@@ -34,7 +34,6 @@ public class LiftManager {
     }
 
     public int updateLift(Lift lift) {
-        Log.e(TAG, "LiftManager is updating lift " + lift);
         return databaseHelper.updateLift(lift);
     }
 
@@ -46,5 +45,17 @@ public class LiftManager {
 
     public long insertCue(Cue cue) {
         return databaseHelper.insertCue(cue);
+    }
+
+    public Cue getCue(long cueId) {
+        return databaseHelper.getCue(cueId).getCue();
+    }
+
+    public int updateCue(Cue cue) {
+        return databaseHelper.updateCue(cue);
+    }
+
+    public LiftDatabaseHelper.CueCursor queryCues(long liftId) {
+        return databaseHelper.queryCues(liftId);
     }
 }

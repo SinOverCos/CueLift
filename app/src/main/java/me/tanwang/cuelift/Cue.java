@@ -20,6 +20,12 @@ public class Cue {
         this.liftId = liftId;
     }
 
+    public Cue(String cue, long liftId) {
+        this.id = -1;
+        this.cue = cue;
+        this.liftId = liftId;
+    }
+
     public long getId() {
         return id;
     }

@@ -6,7 +6,6 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -127,7 +126,7 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
         setListAdapter(null);
     }
 
-    protected class LiftCursorAdapter extends CursorAdapter {
+    private class LiftCursorAdapter extends CursorAdapter {
         private LiftDatabaseHelper.LiftCursor liftCursor;
 
         public LiftCursorAdapter(Context context, LiftDatabaseHelper.LiftCursor liftCursor) {

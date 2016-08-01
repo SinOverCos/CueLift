@@ -1,13 +1,17 @@
 package me.tanwang.cuelift;
 
 import android.app.Activity;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
+//import android.app.Fragment;
+//import android.app.LoaderManager;
 import android.content.Context;
-import android.os.Build;
+//import android.content.Loader;
+import android.database.Cursor;
+import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NavUtils;
-import android.support.v4.content.SharedPreferencesCompat;
+import android.support.v4.content.Loader;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,16 +21,24 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class LiftFragment extends Fragment {
+public class LiftFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "LiftFragment";
+    private static final int ID_LOAD_CUES = 1;
+    private static final String CUE_LIFT_ID = "me.tanwang.cuelift.cue_lift_id";
 
     private LiftFragmentCallbacks callbacks;
     private LiftManager liftManager;
+    private LiftDatabaseHelper.CueCursor cueCursor;
+
+    private ListView cueListView;
 
     private ImageButton liftIconImageButton;
     private EditText liftNameEditText;
@@ -76,6 +88,9 @@ public class LiftFragment extends Fragment {
         setHasOptionsMenu(true);
 
         lift = (Lift) getArguments().getSerializable(Lift.EXTRA_LIFT);
+        Bundle args = new Bundle();
+        args.putLong(CUE_LIFT_ID, lift.getId());
+        getLoaderManager().initLoader(ID_LOAD_CUES, args, this);
     }
 
     @Override
@@ -112,8 +127,11 @@ public class LiftFragment extends Fragment {
         addCueFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String cue = addCueEditText.getText().toString();
-
+                Cue cue = new Cue(addCueEditText.getText().toString(), lift.getId());
+                liftManager.insertCue(cue);
+                Bundle args = new Bundle();
+                args.putLong(CUE_LIFT_ID, lift.getId());
+                getLoaderManager().restartLoader(ID_LOAD_CUES, args, LiftFragment.this);
             }
         });
 
@@ -151,6 +169,55 @@ public class LiftFragment extends Fragment {
 
     public void updateLift() {
         liftManager.updateLift(lift);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        if (id == ID_LOAD_CUES) {
+            long liftId = args.getLong(CUE_LIFT_ID, -1);
+            if (liftId == -1) Log.e(TAG, "LIFT's LIFT ID CAME BACK AS -1");
+            return new CueCursorLoader(getActivity(), liftId);
+        } else {
+            Log.e(TAG, "UNRECOGNIZED ID FOR LOAD REQUEST");
+            return null;
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        if (cueCursor != null) cueCursor.close();
+        cueCursor = (LiftDatabaseHelper.CueCursor) cursor;
+        CueCursorAdapter adapter = new CueCursorAdapter(getActivity(), cueCursor);
+        cueListView.setAdapter(adapter);
+        Log.i(TAG, "Loaded " + cueCursor.getCount() + " cues");
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        cueListView.setAdapter(null);
+    }
+
+    private class CueCursorAdapter extends CursorAdapter {
+        private LiftDatabaseHelper.CueCursor cueCursor;
+
+        public CueCursorAdapter(Context context, LiftDatabaseHelper.CueCursor cueCursor) {
+            super(context, cueCursor, 0);
+            this.cueCursor = cueCursor;
+        }
+
+        @Override
+        public View newView(Context context, Cursor cursor, ViewGroup parent) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            return inflater.inflate(R.layout.list_item_cue, parent, false);
+        }
+
+        @Override
+        public void bindView(View view, Context context, Cursor cursor) {
+            Cue cue = cueCursor.getCue();
+
+            TextView cueTextTextView = (TextView) view.findViewById(R.id.cue_text_text_view);
+            cueTextTextView.setText(cue.getCue());
+        }
     }
 }
 

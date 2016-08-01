@@ -102,10 +102,10 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
         return getWritableDatabase().update(TABLE_CUE, contentValues, "_id=" + cue.getId(), null);
     }
 
-    public LiftCursor queryLifts() {
-        // select * from TABLE_LIFT order by name asc
-        Cursor wrapped = getReadableDatabase().query(TABLE_LIFT, null, null, null, null, null, LIFT_NAME + " asc");
-        return new LiftCursor(wrapped);
+    public CueCursor queryCues(long liftId) {
+        // select * from TABLE_CUE WHERE CUE_LIFT_ID=liftId order by CUE_ID asc
+        Cursor wrapped = getReadableDatabase().query(TABLE_CUE, null, CUE_LIFT_ID + "=" + liftId, null, null, null, CUE_ID + " asc");
+        return new CueCursor(wrapped);
     }
 
     public static class CueCursor extends CursorWrapper {
