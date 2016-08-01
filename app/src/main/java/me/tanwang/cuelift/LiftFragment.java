@@ -124,6 +124,8 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
             @Override
             public void onClick(View v) {
                 Cue cue = new Cue(addCueEditText.getText().toString(), lift.getId());
+                addCueEditText.setText("");
+                addCueEditText.clearFocus();
                 liftManager.insertCue(cue);
                 Bundle args = new Bundle();
                 args.putLong(CUE_LIFT_ID, lift.getId());
