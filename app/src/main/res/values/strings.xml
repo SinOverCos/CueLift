@@ -31,7 +31,8 @@
     <string name="cannot_delete_cue">Cannot delete this cue - this app is broken :(</string>
 
     <string name="today">Today</string>
-    <string name="zero_reps">0 Reps</string>
-    <string name="zero_weight">0 lbs.</string>
+    <string name="x_reps">%1$d Reps</string>
+    <string name="x_weight">%1$d lbs.</string>
+    <string name="set_date">Set Date</string>
 
 </resources>

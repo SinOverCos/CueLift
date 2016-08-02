@@ -119,11 +119,11 @@ Ideas:
                     style="@style/PickerCell" />
 
                 <TextView android:id="@+id/rep_picker"
-                    android:text="@string/zero_reps"
+                    android:text="@string/x_reps"
                     style="@style/PickerCell" />
 
                 <TextView android:id="@+id/weight_picker"
-                    android:text="@string/zero_weight"
+                    android:text="@string/x_weight"
                     style="@style/PickerCell" />
 
                 <android.support.design.widget.FloatingActionButton
