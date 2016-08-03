@@ -122,9 +122,31 @@ Ideas:
                     android:text="@string/x_reps"
                     style="@style/PickerCell" />
 
-                <TextView android:id="@+id/weight_picker"
-                    android:text="@string/x_weight"
-                    style="@style/PickerCell" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1">
+
+                    <android.support.design.widget.TextInputLayout
+                        style="@style/PickerCell"
+                        android:layout_gravity="top">
+
+                    </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputEditText android:id="@+id/weight_edit_text"
+                        android:text="0"
+                        style="@style/PickerCell"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:inputType="number"/>
+
+                    <TextView android:id="@+id/weight_display"
+                        android:text="@string/pounds"
+                        style="@style/PickerCell"
+                        android:layout_weight="0"/>
+
+                </LinearLayout>
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/add_set_fab"
@@ -132,6 +154,7 @@ Ideas:
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/mini_fab_margin"
+                    android:layout_marginLeft="@dimen/inner_margins"
                     android:src="@drawable/ic_add_white" />
 
             </LinearLayout>

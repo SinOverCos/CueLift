@@ -32,7 +32,9 @@
 
     <string name="today">Today</string>
     <string name="x_reps">%1$d Reps</string>
-    <string name="x_weight">%1$d lbs.</string>
-    <string name="set_date">Set Date</string>
+    <string name="pounds">lbs.</string>
+    <string name="set_date">Date</string>
+    <string name="set_reps">Reps</string>
+    <string name="set_weight">Weight</string>
 
 </resources>

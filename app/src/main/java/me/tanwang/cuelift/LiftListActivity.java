@@ -31,7 +31,6 @@ public class LiftListActivity extends AppCompatActivity implements LiftListFragm
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "This brings up a pager with a fragment for the new lift", Toast.LENGTH_SHORT).show();
                 Lift newLift = new Lift();
                 newLift.setId(LiftManager.get(getApplicationContext()).insertLift(newLift));
                 refreshList();

@@ -39,6 +39,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     private static final String CUE_LIFT_ID = "me.tanwang.cuelift.cue_lift_id";
     private static final int ID_LOAD_CUES = 1;
     private static final int REQUEST_DATE = 10;
+    private static final int REQUEST_REPS = 11;
 
     private LiftFragmentCallbacks callbacks;
     private LiftManager liftManager;
@@ -46,14 +47,15 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private LinearLayout cueLinearLayout;
 
-    private TextView datePickerTextView;
-    private TextView repPickerTextView;
-    private TextView weightPickerTextView;
-
     private ImageButton liftIconImageButton;
     private EditText liftNameEditText;
     private EditText addCueEditText;
     private FloatingActionButton addCueFab;
+
+    private TextView datePickerTextView;
+    private TextView repPickerTextView;
+    private EditText weightEditText;
+    private FloatingActionButton addSetFab;
 
     private Lift lift;
     // TODO list the stuff in fragment_lift here
@@ -104,6 +106,20 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         return formatted;
     }
 
+    public int findRepsFromTextView(String text) {
+        String[] split = text.split(" ");
+        if (split.length != 2) {
+            Log.e(TAG, "Either text is bad, or failed to split properly: " + text);
+            return 0;
+        }
+        try {
+            return Integer.parseInt(split[0]);
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "Failed to parse: " + split[0]);
+            return 0;
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lift, parent, false);
@@ -117,7 +133,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
 
         datePickerTextView = (TextView) view.findViewById(R.id.date_picker);
         repPickerTextView = (TextView) view.findViewById(R.id.rep_picker);
-        weightPickerTextView = (TextView) view.findViewById(R.id.weight_picker);
+        weightEditText = (EditText) view.findViewById(R.id.weight_edit_text);
 
         liftIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +188,26 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
             }
         });
 
+        repPickerTextView.setText(String.format(getResources().getString(R.string.x_reps), 0));
+        repPickerTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getFragmentManager();
+                int currentReps = findRepsFromTextView(repPickerTextView.getText().toString());
+                RepDialogFragment repDialogFragment = RepDialogFragment.newInstance(currentReps);
+                repDialogFragment.setTargetFragment(LiftFragment.this, REQUEST_REPS);
+                repDialogFragment.show(fragmentManager, getResources().getString(R.string.reps));
+            }
+        });
+
+        addSetFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+
         // TODO if today's lifts/last day's lifts don't exist, hide that section
         // TODO if no lifts exist at all, hide the PR section
 
@@ -192,6 +228,14 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         if(requestCode == REQUEST_DATE) {
             Date setDate = (Date) data.getSerializableExtra(DateDialogFragment.SET_DATE);
             datePickerTextView.setText(formatDate(setDate));
+        } else if(requestCode == REQUEST_REPS) {
+            int reps = data.getIntExtra(RepDialogFragment.SET_REPS, -1);
+            if (reps == -1) {
+                Log.e(TAG, "Reps from NumberPicker is -1, which isn't supposed to happen");
+                reps = 0;
+            }
+            String repsText = String.format(getResources().getString(R.string.x_reps), reps);
+            repPickerTextView.setText(repsText);
         }
     }
 
