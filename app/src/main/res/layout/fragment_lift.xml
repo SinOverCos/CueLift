@@ -165,8 +165,11 @@ Ideas:
                     style="@style/ListSeparator"
                     android:text="@string/todays_lifts"/>
 
-                <include android:id="@+id/todays_lifts"
-                    layout="@layout/table_with_header_past_lifts" />
+                <TableLayout android:id="@+id/todays_lifts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </TableLayout>
 
             </LinearLayout>
 
@@ -176,8 +179,11 @@ Ideas:
                     style="@style/ListSeparator"
                     android:text="@string/last_days_lifts" />
 
-                <include android:id="@+id/last_days_lifts"
-                    layout="@layout/table_with_header_past_lifts" />
+                <TableLayout android:id="@+id/last_days_lifts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </TableLayout>
 
             </LinearLayout>
 

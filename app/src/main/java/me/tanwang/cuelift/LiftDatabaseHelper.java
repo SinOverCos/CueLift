@@ -150,7 +150,7 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
 
     public SetCursor querySets(long liftId) {
         // select * from TABLE_SET WHERE SET_LIFT_ID=liftId order by CUE_ID asc
-        Cursor wrapped = getReadableDatabase().query(TABLE_SET, null, SET_LIFT_ID + "=" + liftId, null, null, null, SET_DATE + " asc");
+        Cursor wrapped = getReadableDatabase().query(TABLE_SET, null, SET_LIFT_ID + "=" + liftId, null, null, null, SET_DATE + " desc");
         return new SetCursor(wrapped);
     }
 

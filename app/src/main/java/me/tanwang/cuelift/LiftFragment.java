@@ -121,7 +121,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         }
     }
 
-    private int findRepsFromTextView(String text) {
+    private int findRepsFromText(String text) {
         String[] split = text.split(" ");
         if (split.length != 2) {
             Log.e(TAG, "Either text is bad, or failed to split properly: " + text);
@@ -208,7 +208,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
-                int currentReps = findRepsFromTextView(repPickerTextView.getText().toString());
+                int currentReps = findRepsFromText(repPickerTextView.getText().toString());
                 RepDialogFragment repDialogFragment = RepDialogFragment.newInstance(currentReps);
                 repDialogFragment.setTargetFragment(LiftFragment.this, REQUEST_REPS);
                 repDialogFragment.show(fragmentManager, getResources().getString(R.string.reps));
@@ -220,7 +220,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
             public void onClick(View v) {
                 weightEditText.clearFocus();
                 liftManager.insertSet(new Set(datePickerTextView.getText().toString(),
-                                                Integer.parseInt(repPickerTextView.getText().toString()),
+                                                findRepsFromText(repPickerTextView.getText().toString()),
                                                 Integer.parseInt(weightEditText.getText().toString()),
                                                 lift.getId()));
                 reloadSets();
@@ -293,7 +293,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private void reloadSets() {
         Log.i(TAG, "LiftFragment#reloadSets called");
-        //getLoaderManager().restartLoader(ID_LOAD_SETS, setLoadPrep(), this);
+        getLoaderManager().restartLoader(ID_LOAD_SETS, setLoadPrep(), this);
     }
 
     @Override
@@ -327,16 +327,22 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        long liftId = args.getLong(CUE_LIFT_ID, -1);
-        if (liftId == -1) Log.e(TAG, "LIFT'S LIFT ID CAME BACK AS -1");
-
+        long liftId;
         if (id == ID_LOAD_CUES) {
-            return new CueCursorLoader(getActivity(), liftId);
+            liftId = args.getLong(CUE_LIFT_ID, -1);
+            if (liftId == -1) Log.e(TAG, "LIFT'S LIFT ID CAME BACK AS -1 (CUE_LIFT_ID)");
         } else if (id == ID_LOAD_SETS) {
-            return new SetCursorLoader(getActivity(), liftId);
+            liftId = args.getLong(SET_LIFT_ID, -1);
+            if (liftId == -1) Log.e(TAG, "LIFT'S LIFT ID CAME BACK AS -1 (SET_LIFT_ID)");
         } else {
             Log.e(TAG, "UNRECOGNIZED ID FOR LOAD REQUEST");
             return null;
+        }
+
+        if (id == ID_LOAD_CUES) {
+            return new CueCursorLoader(getActivity(), liftId);
+        } else {
+            return new SetCursorLoader(getActivity(), liftId);
         }
     }
 
@@ -381,6 +387,11 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     private void applyLoadedSets(Cursor cursor) {
+        View header1 = getActivity().getLayoutInflater().inflate(R.layout.table_header, null);
+        View header2 = getActivity().getLayoutInflater().inflate(R.layout.table_header, null);
+        todaysLifts.addView(header1);
+        lastDaysLifts.addView(header2);
+
         if (setCursor != null) setCursor.close();
         setCursor = (LiftDatabaseHelper.SetCursor) cursor;
         Log.i(TAG, "Loaded " + setCursor.getCount() + " sets");
