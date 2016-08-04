@@ -20,7 +20,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -30,6 +29,7 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -47,6 +47,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     private LiftFragmentCallbacks callbacks;
     private LiftManager liftManager;
     private LiftDatabaseHelper.CueCursor cueCursor;
+    private LiftDatabaseHelper.SetCursor setCursor;
 
     private LinearLayout cueLinearLayout;
 
@@ -112,6 +113,14 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         return formatted;
     }
 
+    private Date parseDateFromText(String date) {
+        try {
+            return new SimpleDateFormat("dd MMMM yyyy", Locale.CANADA).parse(date);
+        } catch (ParseException e) {
+            return new Date();
+        }
+    }
+
     private int findRepsFromTextView(String text) {
         String[] split = text.split(" ");
         if (split.length != 2) {
@@ -141,6 +150,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         repPickerTextView = (TextView) view.findViewById(R.id.rep_picker);
         weightEditText = (EditText) view.findViewById(R.id.weight_edit_text);
 
+        addSetFab = (FloatingActionButton) view.findViewById(R.id.add_set_fab);
         todaysLifts = (TableLayout) view.findViewById(R.id.todays_lifts);
         lastDaysLifts = (TableLayout) view.findViewById(R.id.last_days_lifts);
 
@@ -186,12 +196,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
             @Override
             public void onClick(View v) {
                 FragmentManager fragmentManager = getActivity().getFragmentManager();
-                Date date;
-                try {
-                    date = new SimpleDateFormat("dd MMMM yyyy", Locale.CANADA).parse(datePickerTextView.getText().toString());
-                } catch (ParseException e) {
-                    date = new Date();
-                }
+                Date date = parseDateFromText(datePickerTextView.getText().toString());
                 DateDialogFragment dateDialogFragment = DateDialogFragment.newInstance(date);
                 dateDialogFragment.setTargetFragment(LiftFragment.this, REQUEST_DATE);
                 dateDialogFragment.show(fragmentManager, getResources().getString(R.string.set_date));
@@ -248,7 +253,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         } else if(requestCode == REQUEST_REPS) {
             int reps = data.getIntExtra(RepDialogFragment.SET_REPS, -1);
             if (reps == -1) {
-                Log.e(TAG, "Reps from NumberPicker is -1, which isn't supposed to happen");
+                Log.e(TAG, "No reps received from NumberPicker!");
                 reps = 0;
             }
             String repsText = String.format(getResources().getString(R.string.x_reps), reps);
@@ -288,7 +293,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private void reloadSets() {
         Log.i(TAG, "LiftFragment#reloadSets called");
-        getLoaderManager().restartLoader(ID_LOAD_SETS, setLoadPrep(), this);
+        //getLoaderManager().restartLoader(ID_LOAD_SETS, setLoadPrep(), this);
     }
 
     @Override
@@ -322,24 +327,26 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        long liftId = args.getLong(CUE_LIFT_ID, -1);
+        if (liftId == -1) Log.e(TAG, "LIFT'S LIFT ID CAME BACK AS -1");
+
         if (id == ID_LOAD_CUES) {
-            long liftId = args.getLong(CUE_LIFT_ID, -1);
-            if (liftId == -1) Log.e(TAG, "LIFT's LIFT ID CAME BACK AS -1");
             return new CueCursorLoader(getActivity(), liftId);
+        } else if (id == ID_LOAD_SETS) {
+            return new SetCursorLoader(getActivity(), liftId);
         } else {
             Log.e(TAG, "UNRECOGNIZED ID FOR LOAD REQUEST");
             return null;
         }
     }
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    private void applyLoadedCues(Cursor cursor) {
         if (cueCursor != null) cueCursor.close();
         cueCursor = (LiftDatabaseHelper.CueCursor) cursor;
         Log.i(TAG, "Loaded " + cueCursor.getCount() + " cues");
 
         // counting on cursor starting before the first row
-        while(cueCursor.moveToNext()) {
+        while (cueCursor.moveToNext()) {
             LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final LinearLayout cueItem = (LinearLayout) inflater.inflate(R.layout.list_item_cue, cueLinearLayout, false);
 
@@ -362,6 +369,78 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
             });
 
             cueLinearLayout.addView(cueItem);
+        }
+    }
+
+    private View makeSetRow(Set set) {
+        View rowLift = getActivity().getLayoutInflater().inflate(R.layout.row_lift, null);
+        ((TextView) rowLift.findViewById(R.id.date_cell_text_view)).setText(set.getDate());
+        ((TextView) rowLift.findViewById(R.id.rep_cell_text_view)).setText(Integer.toString(set.getReps()));
+        ((TextView) rowLift.findViewById(R.id.weight_cell_text_view)).setText(Integer.toString(set.getWeight()));
+        return rowLift;
+    }
+
+    private void applyLoadedSets(Cursor cursor) {
+        if (setCursor != null) setCursor.close();
+        setCursor = (LiftDatabaseHelper.SetCursor) cursor;
+        Log.i(TAG, "Loaded " + setCursor.getCount() + " sets");
+
+        if (!setCursor.moveToFirst()) {
+            Log.w(TAG, "cursor containing sets is empty");
+            return;
+        }
+
+        Set mostRecentSet = setCursor.getSet();
+        ArrayList<Set> todaySets = new ArrayList<Set>();
+        todaySets.add(mostRecentSet);
+        String mostRecentWorkout = mostRecentSet.getDate();
+        while (setCursor.moveToNext()) {
+            Set set = setCursor.getSet();
+            if (set.getDate().equals(mostRecentWorkout)) {
+                todaySets.add(set);
+            } else {
+                break;
+            }
+        }
+
+        for (Set set : todaySets) {
+            todaysLifts.addView(makeSetRow(set));
+        }
+
+        if (setCursor.isAfterLast()) {
+            Log.i(TAG, "No sets from previous day found");
+            return;
+        }
+
+        Set mostRecentLastDaySet = setCursor.getSet();
+        ArrayList<Set> lastDaySets = new ArrayList<Set>();
+        lastDaySets.add(mostRecentLastDaySet);
+        String lastWorkout = mostRecentLastDaySet.getDate();
+        while (setCursor.moveToNext()) {
+            Set set = setCursor.getSet();
+            if (set.getDate().equals(lastWorkout)) {
+                lastDaySets.add(set);
+            } else {
+                break;
+            }
+        }
+
+        for (Set set : lastDaySets) {
+            lastDaysLifts.addView(makeSetRow(set));
+        }
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+
+        int loaderId = loader.getId();
+
+        if (loaderId == ID_LOAD_CUES) {
+            applyLoadedCues(cursor);
+        } else if (loaderId == ID_LOAD_SETS) {
+            applyLoadedSets(cursor);
+        } else {
+            Log.e(TAG, "Unrecognized loader ID: " + loaderId);
         }
     }
 
