@@ -128,6 +128,49 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /*** SET ***/
+
+    public long insertSet(Set set) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SET_DATE, set.getDate());
+        contentValues.put(SET_REPS, set.getReps());
+        contentValues.put(SET_WEIGHT, set.getWeight());
+        contentValues.put(SET_LIFT_ID, set.getLiftId());
+        return getWritableDatabase().insert(TABLE_SET, null, contentValues);
+    }
+
+    public SetCursor getSet(long setId) {
+        Cursor singleSetCursor = getReadableDatabase().query(TABLE_SET, null, SET_ID + "=" + setId, null, null, null, null, "1");
+        return new SetCursor(singleSetCursor);
+    }
+
+    public int deleteSet(Set set) {
+        return getWritableDatabase().delete(TABLE_SET, "_id=?", new String[] { String.valueOf(set.getId()) });
+    }
+
+    public SetCursor querySets(long liftId) {
+        // select * from TABLE_SET WHERE SET_LIFT_ID=liftId order by CUE_ID asc
+        Cursor wrapped = getReadableDatabase().query(TABLE_SET, null, SET_LIFT_ID + "=" + liftId, null, null, null, SET_DATE + " asc");
+        return new SetCursor(wrapped);
+    }
+
+    public static class SetCursor extends CursorWrapper {
+
+        public SetCursor(Cursor cursor) {
+            super(cursor);
+        }
+
+        public Set getSet() {
+            if (isBeforeFirst() || isAfterLast()) { return null; }
+            Set set = new Set();
+            set.setId(getLong(getColumnIndex(SET_ID)));
+            set.setDate(getString(getColumnIndex(SET_DATE)));
+            set.setReps(getInt(getColumnIndex(SET_REPS)));
+            set.setWeight(getInt(getColumnIndex(SET_WEIGHT)));
+            set.setLiftId(getLong(getColumnIndex(SET_LIFT_ID)));
+            return set;
+        }
+    }
 
     /*** DB STUFF ***/
 

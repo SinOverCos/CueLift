@@ -24,20 +24,23 @@ import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.IllegalFormatException;
 import java.util.Locale;
 
 public class LiftFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = "LiftFragment";
     private static final String CUE_LIFT_ID = "me.tanwang.cuelift.cue_lift_id";
+    private static final String SET_LIFT_ID = "me.tanwang.cuelift.set_lift_id";
+
     private static final int ID_LOAD_CUES = 1;
+    private static final int ID_LOAD_SETS = 2;
     private static final int REQUEST_DATE = 10;
     private static final int REQUEST_REPS = 11;
 
@@ -56,6 +59,9 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     private TextView repPickerTextView;
     private EditText weightEditText;
     private FloatingActionButton addSetFab;
+
+    private TableLayout todaysLifts;
+    private TableLayout lastDaysLifts;
 
     private Lift lift;
     // TODO list the stuff in fragment_lift here
@@ -100,13 +106,13 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         lift = (Lift) getArguments().getSerializable(Lift.EXTRA_LIFT);
     }
 
-    public String formatDate(Date date) {
+    private String formatDate(Date date) {
         String formatted = new SimpleDateFormat("dd MMMM yyyy", Locale.CANADA).format(date);
         Log.i(TAG, "Formatted date: " + formatted);
         return formatted;
     }
 
-    public int findRepsFromTextView(String text) {
+    private int findRepsFromTextView(String text) {
         String[] split = text.split(" ");
         if (split.length != 2) {
             Log.e(TAG, "Either text is bad, or failed to split properly: " + text);
@@ -134,6 +140,9 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         datePickerTextView = (TextView) view.findViewById(R.id.date_picker);
         repPickerTextView = (TextView) view.findViewById(R.id.rep_picker);
         weightEditText = (EditText) view.findViewById(R.id.weight_edit_text);
+
+        todaysLifts = (TableLayout) view.findViewById(R.id.todays_lifts);
+        lastDaysLifts = (TableLayout) view.findViewById(R.id.last_days_lifts);
 
         liftIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,6 +179,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         });
 
         loadCues();
+        loadSets();
 
         datePickerTextView.setText(formatDate(new Date()));
         datePickerTextView.setOnClickListener(new View.OnClickListener() {
@@ -203,10 +213,16 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         addSetFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                weightEditText.clearFocus();
+                liftManager.insertSet(new Set(datePickerTextView.getText().toString(),
+                                                Integer.parseInt(repPickerTextView.getText().toString()),
+                                                Integer.parseInt(weightEditText.getText().toString()),
+                                                lift.getId()));
+                reloadSets();
             }
         });
 
+        // TODO reloaod sets on delete
 
         // TODO if today's lifts/last day's lifts don't exist, hide that section
         // TODO if no lifts exist at all, hide the PR section
@@ -220,6 +236,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         Log.i(TAG, "LiftFragment#onResume called");
         if (getUserVisibleHint()) {
             reloadCues();
+            reloadSets();
         }
     }
 
@@ -239,20 +256,39 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         }
     }
 
-    public void loadCues() {
-        Log.i(TAG, "LiftFragment#loadCues called");
+    private Bundle cueLoadPrep() {
         cueLinearLayout.removeAllViews();
         Bundle args = new Bundle();
         args.putLong(CUE_LIFT_ID, lift.getId());
-        getLoaderManager().initLoader(ID_LOAD_CUES, args, this);
+        return args;
     }
 
-    public void reloadCues() {
+    private void loadCues() {
+        Log.i(TAG, "LiftFragment#loadCues called");
+        getLoaderManager().initLoader(ID_LOAD_CUES, cueLoadPrep(), this);
+    }
+
+    private void reloadCues() {
         Log.i(TAG, "LiftFragment#reloadCues called");
-        cueLinearLayout.removeAllViews();
+        getLoaderManager().restartLoader(ID_LOAD_CUES, cueLoadPrep(), this);
+    }
+
+    private Bundle setLoadPrep() {
+        todaysLifts.removeAllViews();
+        lastDaysLifts.removeAllViews();
         Bundle args = new Bundle();
-        args.putLong(CUE_LIFT_ID, lift.getId());
-        getLoaderManager().restartLoader(ID_LOAD_CUES, args, this);
+        args.putLong(SET_LIFT_ID, lift.getId());
+        return args;
+    }
+
+    private  void loadSets() {
+        Log.i(TAG, "LiftFragment#loadSets called");
+        getLoaderManager().initLoader(ID_LOAD_SETS, setLoadPrep(), this);
+    }
+
+    private void reloadSets() {
+        Log.i(TAG, "LiftFragment#reloadSets called");
+        getLoaderManager().restartLoader(ID_LOAD_SETS, setLoadPrep(), this);
     }
 
     @Override
@@ -330,31 +366,6 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        cueLinearLayout.removeAllViews();
-    }
-
-    private class CueCursorAdapter extends CursorAdapter {
-        private LiftDatabaseHelper.CueCursor cueCursor;
-
-        public CueCursorAdapter(Context context, LiftDatabaseHelper.CueCursor cueCursor) {
-            super(context, cueCursor, 0);
-            this.cueCursor = cueCursor;
-        }
-
-        @Override
-        public View newView(Context context, Cursor cursor, ViewGroup parent) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            return inflater.inflate(R.layout.list_item_cue, parent, false);
-        }
-
-        @Override
-        public void bindView(View view, Context context, Cursor cursor) {
-            Cue cue = cueCursor.getCue();
-
-            TextView cueTextTextView = (TextView) view.findViewById(R.id.cue_text_text_view);
-            cueTextTextView.setText(cue.getCue());
-        }
-    }
+    public void onLoaderReset(Loader<Cursor> loader) {}
 }
 

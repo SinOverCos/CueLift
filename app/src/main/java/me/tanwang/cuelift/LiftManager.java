@@ -62,4 +62,23 @@ public class LiftManager {
     public LiftDatabaseHelper.CueCursor queryCues(long liftId) {
         return databaseHelper.queryCues(liftId);
     }
+
+
+    /*** Set ***/
+
+    public long insertSet(Set set) {
+        return databaseHelper.insertSet(set);
+    }
+
+    public Set getSet(long setId) {
+        return databaseHelper.getSet(setId).getSet();
+    }
+
+    public int deleteSet(Set set) {
+        return databaseHelper.deleteSet(set);
+    }
+
+    public LiftDatabaseHelper.SetCursor querySets(long liftId) {
+        return databaseHelper.querySets(liftId);
+    }
 }
