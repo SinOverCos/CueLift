@@ -64,6 +64,9 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     private TableLayout todaysLifts;
     private TableLayout lastDaysLifts;
 
+    private TextView weightPrTextView;
+    private TextView volumePrTextView;
+
     private Lift lift;
     // TODO list the stuff in fragment_lift here
 
@@ -154,6 +157,9 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         todaysLifts = (TableLayout) view.findViewById(R.id.todays_lifts);
         lastDaysLifts = (TableLayout) view.findViewById(R.id.last_days_lifts);
 
+        weightPrTextView = (TextView) view.findViewById(R.id.lift_pr_weight_text_view);
+        volumePrTextView = (TextView) view.findViewById(R.id.lift_pr_volume_text_view);
+
         liftIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -226,6 +232,12 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
                 reloadSets();
             }
         });
+
+        weightPrTextView.setText(String.format(Locale.CANADA, getResources().getString(R.string.weight_pr), lift.getMaxWeight()));
+        volumePrTextView.setText(String.format(Locale.CANADA, getResources().getString(R.string.volume_pr), lift.getMaxVolume()));
+
+        // TODO FIX HOW DATES ARE STORED (STR) IN DB!
+        null.impossible();
 
         // TODO reloaod sets on delete
 
