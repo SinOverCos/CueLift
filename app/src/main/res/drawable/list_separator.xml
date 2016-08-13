@@ -4,7 +4,7 @@
     android:shape="rectangle">
 
     <size android:width="350dp" android:height="1dp" />
-    <solid android:color="@color/emphasis"/>
+    <solid android:color="@color/colorAccent"/>
 
 </shape>
 <!-- Can't vary the width so it'll look off on some devices. Damn listSeparatorTextViewStyle is private -->

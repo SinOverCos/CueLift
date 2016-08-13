@@ -329,6 +329,10 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
             if (setVolume > volume) volume = setVolume;
             if (setWeight > weight) weight = setWeight;
         }
+        if (weight > lift.getMaxWeight())
+            Toast.makeText(getActivity(), R.string.prw_toast, Toast.LENGTH_SHORT).show();
+        if (volume > lift.getMaxVolume())
+            Toast.makeText(getActivity(), R.string.prv_toast, Toast.LENGTH_SHORT).show();
         lift.setMaxWeight(weight);
         lift.setMaxVolume(volume);
         weightPrTextView.setText(String.format(Locale.CANADA, getResources().getString(R.string.weight_pr), weight));

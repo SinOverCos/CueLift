@@ -38,6 +38,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="2dp"
             android:textSize="20dp"
+            android:textColor="#DE000000"
             android:textStyle="bold"
             android:text="@string/generic_title"/>
 
@@ -49,6 +50,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="2dp"
             android:textSize="16dp"
+            android:textColor="#8A000000"
             android:text="@string/generic_text"/>
 
     </RelativeLayout>

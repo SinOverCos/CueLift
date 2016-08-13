@@ -52,7 +52,7 @@
         <item name="android:paddingLeft">@dimen/inner_margins</item>
         <item name="android:paddingBottom">@dimen/inner_margins</item>
 
-        <item name="android:textColor">@color/emphasis</item>
+        <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textSize">@dimen/separator_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -62,13 +62,14 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#DE000000</item>
         <item name="android:textSize">@dimen/table_header_text_size</item>
     </style>
 
     <style name="LiftHistoryTableCell">
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center</item>
+        <item name="android:textColor">#8A000000</item>
     </style>
 
     <style name="PickerCell">
@@ -77,7 +78,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:gravity">center</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#DE000000</item>
         <item name="android:textSize">@dimen/table_header_text_size</item>
     </style>
 
