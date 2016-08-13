@@ -5,7 +5,6 @@
 ## Design
 ## TODO
 
-- Add proper empty list view
 - Support custom pictures for lifts
 - Change ListSeparator's length
 - =======================
