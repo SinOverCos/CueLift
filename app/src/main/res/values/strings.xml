@@ -20,8 +20,8 @@
     <string name="weight_pr">Max Weight Lifted: %1$d</string>
     <string name="volume_pr">Max Volume Lifted: %1$d</string>
 
-    <string name="todays_lifts">Today\'s Lifts</string>
-    <string name="last_days_lifts">Last Day\'s Lifts</string>
+    <string name="todays_lifts">Most Recent Lifts</string>
+    <string name="last_days_lifts">Previous Day\'s Lifts</string>
     <string name="date">Date</string>
     <string name="reps">Reps</string>
     <string name="weight">Weight</string>
@@ -29,6 +29,7 @@
     <string name="lift_cues">Lift Cues</string>
     <string name="add_cue">Add Cue (Limit 255 Chars)</string>
     <string name="cannot_delete_cue">Cannot delete this cue - this app is broken :(</string>
+    <string name="cannot_delete_set">Cannot delete this set - this app is broken :(</string>
 
     <string name="today">Today</string>
     <string name="x_reps">%1$d Reps</string>
@@ -36,5 +37,8 @@
     <string name="set_date">Date</string>
     <string name="set_reps">Reps</string>
     <string name="set_weight">Weight</string>
+
+    <string name="prv_toast">Nice, new volume PR!</string>
+    <string name="prw_toast">Nice, new weight PR!</string>
 
 </resources>

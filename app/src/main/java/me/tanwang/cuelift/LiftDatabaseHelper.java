@@ -77,6 +77,8 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
             Lift lift = new Lift();
             lift.setId(getLong(getColumnIndex(LIFT_ID)));
             lift.setDisplayName(getString(getColumnIndex(LIFT_NAME)));
+            lift.setMaxWeight(getInt(getColumnIndex(LIFT_MAX_WEIGHT)));
+            lift.setMaxVolume(getInt(getColumnIndex(LIFT_MAX_VOL)));
             return lift;
         }
     }
@@ -164,7 +166,7 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
             if (isBeforeFirst() || isAfterLast()) { return null; }
             Set set = new Set();
             set.setId(getLong(getColumnIndex(SET_ID)));
-            set.setDate(getString(getColumnIndex(SET_DATE)));
+            set.setDate(getLong(getColumnIndex(SET_DATE)));
             set.setReps(getInt(getColumnIndex(SET_REPS)));
             set.setWeight(getInt(getColumnIndex(SET_WEIGHT)));
             set.setLiftId(getLong(getColumnIndex(SET_LIFT_ID)));

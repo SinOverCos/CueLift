@@ -20,10 +20,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private static final int ID_LOAD_CUES = 1;
     private static final int ID_LOAD_SETS = 2;
+    private static final int ID_RELOAD_SETS = 3;
     private static final int REQUEST_DATE = 10;
     private static final int REQUEST_REPS = 11;
 
@@ -108,11 +111,11 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         lift = (Lift) getArguments().getSerializable(Lift.EXTRA_LIFT);
+
     }
 
     private String formatDate(Date date) {
         String formatted = new SimpleDateFormat("dd MMMM yyyy", Locale.CANADA).format(date);
-        Log.i(TAG, "Formatted date: " + formatted);
         return formatted;
     }
 
@@ -135,6 +138,14 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         } catch (NumberFormatException e) {
             Log.e(TAG, "Failed to parse: " + split[0]);
             return 0;
+        }
+    }
+
+    private void hideSoftKeyboard() {
+        View view = getActivity().getCurrentFocus();
+        if (view != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 
@@ -185,6 +196,8 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         addCueFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                addCueEditText.clearFocus();
+                hideSoftKeyboard();
                 Cue cue = new Cue(addCueEditText.getText().toString(), lift.getId());
                 if (cue.getCue().equals("")) return;
                 addCueEditText.setText("");
@@ -225,21 +238,25 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
             @Override
             public void onClick(View v) {
                 weightEditText.clearFocus();
-                liftManager.insertSet(new Set(datePickerTextView.getText().toString(),
+                hideSoftKeyboard();
+                if (weightEditText.getText().toString().equals("")) return;
+                int reps = findRepsFromText(repPickerTextView.getText().toString());
+                int weight = Integer.parseInt(weightEditText.getText().toString());
+                if (reps == 0) return;
+                if (weight == 0) return;
+                liftManager.insertSet(new Set(parseDateFromText(datePickerTextView.getText().toString()).getTime(),
                                                 findRepsFromText(repPickerTextView.getText().toString()),
                                                 Integer.parseInt(weightEditText.getText().toString()),
                                                 lift.getId()));
-                reloadSets();
+
+                reloadSets(ID_LOAD_SETS);
             }
         });
 
         weightPrTextView.setText(String.format(Locale.CANADA, getResources().getString(R.string.weight_pr), lift.getMaxWeight()));
         volumePrTextView.setText(String.format(Locale.CANADA, getResources().getString(R.string.volume_pr), lift.getMaxVolume()));
 
-        // TODO FIX HOW DATES ARE STORED (STR) IN DB!
-        null.impossible();
-
-        // TODO reloaod sets on delete
+        // TODO reload sets on delete
 
         // TODO if today's lifts/last day's lifts don't exist, hide that section
         // TODO if no lifts exist at all, hide the PR section
@@ -253,7 +270,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         Log.i(TAG, "LiftFragment#onResume called");
         if (getUserVisibleHint()) {
             reloadCues();
-            reloadSets();
+            reloadSets(ID_LOAD_SETS);
         }
     }
 
@@ -290,22 +307,42 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         getLoaderManager().restartLoader(ID_LOAD_CUES, cueLoadPrep(), this);
     }
 
-    private Bundle setLoadPrep() {
-        todaysLifts.removeAllViews();
-        lastDaysLifts.removeAllViews();
+    private Bundle setLoadPrep(int id) {
+        if (id != ID_RELOAD_SETS) {
+            todaysLifts.removeAllViews();
+            lastDaysLifts.removeAllViews();
+        }
         Bundle args = new Bundle();
         args.putLong(SET_LIFT_ID, lift.getId());
         return args;
     }
 
-    private  void loadSets() {
-        Log.i(TAG, "LiftFragment#loadSets called");
-        getLoaderManager().initLoader(ID_LOAD_SETS, setLoadPrep(), this);
+    private void updatePrs() {
+        setCursor.moveToPosition(-1);
+        Set set;
+        int volume = 0;
+        int weight = 0;
+        while (setCursor.moveToNext()) {
+            set = setCursor.getSet();
+            int setVolume = set.getReps() * set.getWeight();
+            int setWeight = set.getWeight();
+            if (setVolume > volume) volume = setVolume;
+            if (setWeight > weight) weight = setWeight;
+        }
+        lift.setMaxWeight(weight);
+        lift.setMaxVolume(volume);
+        weightPrTextView.setText(String.format(Locale.CANADA, getResources().getString(R.string.weight_pr), weight));
+        volumePrTextView.setText(String.format(Locale.CANADA, getResources().getString(R.string.volume_pr), volume));
     }
 
-    private void reloadSets() {
+    private  void loadSets() {
+        Log.i(TAG, "LiftFragment#loadSets called");
+        getLoaderManager().initLoader(ID_LOAD_SETS, setLoadPrep(ID_LOAD_SETS), this);
+    }
+
+    private void reloadSets(int id) {
         Log.i(TAG, "LiftFragment#reloadSets called");
-        getLoaderManager().restartLoader(ID_LOAD_SETS, setLoadPrep(), this);
+        getLoaderManager().restartLoader(id, setLoadPrep(id), this);
     }
 
     @Override
@@ -328,7 +365,6 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onPause() {
-        Log.i(TAG, "LiftFragment onPause is calling updateLift");
         updateLift();
         super.onPause();
     }
@@ -343,7 +379,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         if (id == ID_LOAD_CUES) {
             liftId = args.getLong(CUE_LIFT_ID, -1);
             if (liftId == -1) Log.e(TAG, "LIFT'S LIFT ID CAME BACK AS -1 (CUE_LIFT_ID)");
-        } else if (id == ID_LOAD_SETS) {
+        } else if (id == ID_LOAD_SETS || id == ID_RELOAD_SETS) {
             liftId = args.getLong(SET_LIFT_ID, -1);
             if (liftId == -1) Log.e(TAG, "LIFT'S LIFT ID CAME BACK AS -1 (SET_LIFT_ID)");
         } else {
@@ -392,9 +428,33 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
 
     private View makeSetRow(Set set) {
         View rowLift = getActivity().getLayoutInflater().inflate(R.layout.row_lift, null);
-        ((TextView) rowLift.findViewById(R.id.date_cell_text_view)).setText(set.getDate());
+        ((TextView) rowLift.findViewById(R.id.date_cell_text_view)).setText(formatDate(new Date(set.getDate())));
         ((TextView) rowLift.findViewById(R.id.rep_cell_text_view)).setText(Integer.toString(set.getReps()));
         ((TextView) rowLift.findViewById(R.id.weight_cell_text_view)).setText(Integer.toString(set.getWeight()));
+        final ImageButton deleteSetImageButton = ((ImageButton) rowLift.findViewById(R.id.delete_set_button));
+        deleteSetImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TableRow row = (TableRow) deleteSetImageButton.getParent();
+                TableLayout table = (TableLayout) row.getParent();
+                int index = table.indexOfChild(row) - 1; // -1 for the header child
+                if (table.getId() == R.id.last_days_lifts) {
+                    index += todaysLifts.getChildCount() - 1;
+                }
+                setCursor.moveToPosition(index);
+                if (setCursor.isBeforeFirst() || setCursor.isAfterLast()) {
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.cannot_delete_set, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                liftManager.deleteSet(setCursor.getSet());
+                if (table.getChildCount() == 2) {
+                    reloadSets(ID_LOAD_SETS);
+                } else {
+                    table.removeView(row);
+                    reloadSets(ID_RELOAD_SETS);
+                }
+            }
+        });
         return rowLift;
     }
 
@@ -416,10 +476,10 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         Set mostRecentSet = setCursor.getSet();
         ArrayList<Set> todaySets = new ArrayList<Set>();
         todaySets.add(mostRecentSet);
-        String mostRecentWorkout = mostRecentSet.getDate();
+        long mostRecentWorkout = mostRecentSet.getDate();
         while (setCursor.moveToNext()) {
             Set set = setCursor.getSet();
-            if (set.getDate().equals(mostRecentWorkout)) {
+            if (set.getDate() == mostRecentWorkout) {
                 todaySets.add(set);
             } else {
                 break;
@@ -438,10 +498,10 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         Set mostRecentLastDaySet = setCursor.getSet();
         ArrayList<Set> lastDaySets = new ArrayList<Set>();
         lastDaySets.add(mostRecentLastDaySet);
-        String lastWorkout = mostRecentLastDaySet.getDate();
+        long lastWorkout = mostRecentLastDaySet.getDate();
         while (setCursor.moveToNext()) {
             Set set = setCursor.getSet();
-            if (set.getDate().equals(lastWorkout)) {
+            if (set.getDate() == lastWorkout) {
                 lastDaySets.add(set);
             } else {
                 break;
@@ -462,9 +522,15 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
             applyLoadedCues(cursor);
         } else if (loaderId == ID_LOAD_SETS) {
             applyLoadedSets(cursor);
+            updatePrs();
+        } else if (loaderId == ID_RELOAD_SETS) { // only reset cursor, don't reload rows in the table
+            setCursor = (LiftDatabaseHelper.SetCursor) cursor;
+            updatePrs();
         } else {
             Log.e(TAG, "Unrecognized loader ID: " + loaderId);
         }
+
+        addCueEditText.clearFocus();
     }
 
     @Override

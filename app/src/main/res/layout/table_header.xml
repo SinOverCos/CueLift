@@ -10,4 +10,11 @@
     <TextView
         style="@style/LiftHistoryTableHeader"
         android:text="@string/weight"/>
+    <ImageButton
+        android:id="@+id/delete_cue_button"
+        android:src="@drawable/ic_transparent_24dp"
+        android:background="@color/transparent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
 </TableRow>

@@ -21,3 +21,4 @@
 - graph/display all past sets
 - adjust cue trash/text colours
 - share on social media?
+- change PR on add/delete
