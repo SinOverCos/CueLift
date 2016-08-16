@@ -1,12 +1,19 @@
 package me.tanwang.cuelift;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.LoaderManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
 import android.app.FragmentManager;
@@ -29,6 +36,9 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FilenameFilter;
+import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,6 +56,8 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     private static final int ID_RELOAD_SETS = 3;
     private static final int REQUEST_DATE = 10;
     private static final int REQUEST_REPS = 11;
+
+    private static final int FILE_SELECT_CODE = 20;
 
     private LiftFragmentCallbacks callbacks;
     private LiftManager liftManager;
@@ -149,6 +161,39 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         }
     }
 
+    // http://stackoverflow.com/questions/7856959/android-file-chooser
+    private void showFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/png");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        try {
+            startActivityForResult( Intent.createChooser(intent, getResources().getString(R.string.choose_lift_icon)),
+                                    FILE_SELECT_CODE);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getActivity(), "Please install a File Manager.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // http://stackoverflow.com/questions/7856959/android-file-chooser
+    public String getPath(Context context, Uri uri) throws URISyntaxException {
+        if ("content".equalsIgnoreCase(uri.getScheme())) {
+            String[] projection = { "_data" };
+            Cursor cursor = null;
+
+            cursor = context.getContentResolver().query(uri, projection, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow("_data");
+            if (cursor.moveToFirst()) {
+                String s = cursor.getString(column_index);
+                cursor.close();
+                return s;
+            }
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
+        }
+
+        return null;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lift, parent, false);
@@ -174,8 +219,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         liftIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i(TAG, "This fragment holds: " + lift.toString());
-                Toast.makeText(getActivity(), "This will bring up a file browser to find a new icon", Toast.LENGTH_LONG).show();
+                showFileChooser();
             }
         });
 
@@ -287,6 +331,12 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
             }
             String repsText = String.format(getResources().getString(R.string.x_reps), reps);
             repPickerTextView.setText(repsText);
+        } else if (requestCode == FILE_SELECT_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Uri uri = data.getData();
+                Log.d(TAG, "File Uri: " + uri.toString());
+                liftIconImageButton.setImageURI(uri);
+            }
         }
     }
 

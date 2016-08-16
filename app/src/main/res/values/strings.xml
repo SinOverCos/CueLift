@@ -39,6 +39,7 @@
     <string name="set_date">Date</string>
     <string name="set_reps">Reps</string>
     <string name="set_weight">Weight</string>
+    <string name="choose_lift_icon">Choose a picture for this lift</string>
 
     <string name="prv_toast">Nice, new volume PR!</string>
     <string name="prw_toast">Nice, new weight PR!</string>

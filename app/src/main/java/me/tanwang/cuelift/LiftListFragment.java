@@ -1,12 +1,16 @@
 package me.tanwang.cuelift;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +18,9 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.io.File;
+import java.io.FilenameFilter;
 
 public class LiftListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -24,6 +31,7 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
     private LiftLiftFragmentCallbacks callbacks;
     private LiftManager liftManager;
     private LiftDatabaseHelper.LiftCursor liftCursor;
+
 
     // Required for hosting activities
     public interface LiftLiftFragmentCallbacks {
@@ -102,6 +110,8 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
         liftCursor.moveToPosition(position);
         callbacks.onLiftSelected(liftCursor.getLift());
     }
+
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

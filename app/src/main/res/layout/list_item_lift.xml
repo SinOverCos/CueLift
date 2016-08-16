@@ -39,7 +39,6 @@
             android:layout_marginTop="2dp"
             android:textSize="20dp"
             android:textColor="#DE000000"
-            android:textStyle="bold"
             android:text="@string/generic_title"/>
 
         <TextView

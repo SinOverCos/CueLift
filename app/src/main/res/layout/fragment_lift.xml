@@ -70,7 +70,7 @@ Ideas:
                         android:text="@string/generic_title"
                         android:singleLine="true"
                         android:ellipsize="start"
-                        android:inputType="textCapCharacters" />
+                        android:inputType="textCapWords" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -106,8 +106,9 @@ Ideas:
                         <android.support.design.widget.TextInputEditText android:id="@+id/add_cue_edit_text"
                             android:hint="@string/add_cue"
                             android:layout_width="match_parent"
-                            android:singleLine="true"
-                            android:layout_height="wrap_content" />
+                            android:layout_height="wrap_content"
+                            android:inputType="textCapSentences"
+                            android:singleLine="true" />
 
                     </android.support.design.widget.TextInputLayout>
 

@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.tanwang.cuelift">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/app_icon_list"
@@ -21,7 +23,7 @@
         </activity>
 
         <activity android:name=".LiftPagerActivity"
-            android:windowSoftInputMode="adjustNothing">
+            android:windowSoftInputMode="adjustPan">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LiftListActivity">
             </meta-data>
