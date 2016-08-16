@@ -12,12 +12,14 @@ public class Lift implements Serializable {
     private String displayName;
     private int maxWeight;
     private int maxVolume;
+    private String iconPath;
 
     public Lift() {
         id = -1;
         displayName = null;
         maxWeight = 0;
         maxVolume = 0;
+        iconPath = null;
     }
 
     public String toString() {
@@ -55,4 +57,13 @@ public class Lift implements Serializable {
     public void setId(long id) {
         this.id = id;
     }
+
+    public String getIconPath() {
+        return iconPath;
+    }
+
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
+    }
+
 }

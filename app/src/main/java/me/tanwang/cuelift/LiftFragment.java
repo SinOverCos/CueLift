@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.support.design.widget.FloatingActionButton;
 import android.os.Bundle;
@@ -38,6 +39,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,6 +60,8 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     private static final int REQUEST_REPS = 11;
 
     private static final int FILE_SELECT_CODE = 20;
+
+    private int liftIconTakeFlags;
 
     private LiftFragmentCallbacks callbacks;
     private LiftManager liftManager;
@@ -163,12 +167,20 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
 
     // http://stackoverflow.com/questions/7856959/android-file-chooser
     private void showFileChooser() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        Intent intent;
+        if (Build.VERSION.SDK_INT >= 19) {
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT); // action open doc is for 19+
+            intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+        } else {
+            intent = new Intent(Intent.ACTION_GET_CONTENT); // action get content is for 18-
+        }
         intent.setType("image/png");
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true); // not relevant probs
         intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         try {
-            startActivityForResult( Intent.createChooser(intent, getResources().getString(R.string.choose_lift_icon)),
-                                    FILE_SELECT_CODE);
+            Intent chooser = Intent.createChooser(intent, getResources().getString(R.string.choose_lift_icon));
+            startActivityForResult(chooser, FILE_SELECT_CODE);
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(getActivity(), "Please install a File Manager.", Toast.LENGTH_SHORT).show();
         }
@@ -216,6 +228,12 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         weightPrTextView = (TextView) view.findViewById(R.id.lift_pr_weight_text_view);
         volumePrTextView = (TextView) view.findViewById(R.id.lift_pr_volume_text_view);
 
+        if (lift.getIconPath() != null) {
+            Log.i(TAG, "lift has a source: " + lift.getIconPath());
+            liftIconImageButton.setImageURI(Uri.parse(lift.getIconPath()));
+        } else {
+            Log.i(TAG, "lift has no source: " + lift.getIconPath());
+        }
         liftIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -300,18 +318,12 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         weightPrTextView.setText(String.format(Locale.CANADA, getResources().getString(R.string.weight_pr), lift.getMaxWeight()));
         volumePrTextView.setText(String.format(Locale.CANADA, getResources().getString(R.string.volume_pr), lift.getMaxVolume()));
 
-        // TODO reload sets on delete
-
-        // TODO if today's lifts/last day's lifts don't exist, hide that section
-        // TODO if no lifts exist at all, hide the PR section
-
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(TAG, "LiftFragment#onResume called");
         if (getUserVisibleHint()) {
             reloadCues();
             reloadSets(ID_LOAD_SETS);
@@ -334,7 +346,13 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         } else if (requestCode == FILE_SELECT_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 Uri uri = data.getData();
+                if (Build.VERSION.SDK_INT >= 19) {
+                    Log.i(TAG, "Requesting persistable URI");
+                    final int takeFlags = data.getFlags() & Intent.FLAG_GRANT_READ_URI_PERMISSION;
+                    getActivity().getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                }
                 Log.d(TAG, "File Uri: " + uri.toString());
+                lift.setIconPath(uri.toString());
                 liftIconImageButton.setImageURI(uri);
             }
         }
@@ -348,12 +366,10 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     private void loadCues() {
-        Log.i(TAG, "LiftFragment#loadCues called");
         getLoaderManager().initLoader(ID_LOAD_CUES, cueLoadPrep(), this);
     }
 
     private void reloadCues() {
-        Log.i(TAG, "LiftFragment#reloadCues called");
         getLoaderManager().restartLoader(ID_LOAD_CUES, cueLoadPrep(), this);
     }
 
@@ -390,12 +406,10 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     private  void loadSets() {
-        Log.i(TAG, "LiftFragment#loadSets called");
         getLoaderManager().initLoader(ID_LOAD_SETS, setLoadPrep(ID_LOAD_SETS), this);
     }
 
     private void reloadSets(int id) {
-        Log.i(TAG, "LiftFragment#reloadSets called");
         getLoaderManager().restartLoader(id, setLoadPrep(id), this);
     }
 
@@ -451,7 +465,6 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     private void applyLoadedCues(Cursor cursor) {
         if (cueCursor != null) cueCursor.close();
         cueCursor = (LiftDatabaseHelper.CueCursor) cursor;
-        Log.i(TAG, "Loaded " + cueCursor.getCount() + " cues");
 
         // counting on cursor starting before the first row
         while (cueCursor.moveToNext()) {
@@ -520,10 +533,8 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
 
         if (setCursor != null) setCursor.close();
         setCursor = (LiftDatabaseHelper.SetCursor) cursor;
-        Log.i(TAG, "Loaded " + setCursor.getCount() + " sets");
 
         if (!setCursor.moveToFirst()) {
-            Log.w(TAG, "cursor containing sets is empty");
             return;
         }
 

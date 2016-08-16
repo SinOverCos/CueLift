@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -16,11 +17,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.net.URI;
 
 public class LiftListFragment extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -156,10 +159,18 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
 
             TextView liftNameTextView = (TextView) view.findViewById(R.id.lift_name_text_view);
             TextView liftDetailTextView = (TextView) view.findViewById(R.id.lift_detail_text_view);
+            ImageButton liftIconImageButton = (ImageButton) view.findViewById(R.id.lift_icon_image_button);
 
             liftNameTextView.setText(lift.getDisplayName());
             String detail = String.format(getResources().getString(R.string.lift_detail), lift.getMaxWeight(), lift.getMaxVolume());
             liftDetailTextView.setText(detail);
+
+            if (lift.getIconPath() != null) {
+                Log.i(TAG, lift.getIconPath());
+                liftIconImageButton.setImageURI(Uri.parse(lift.getIconPath()));
+            } else {
+                Log.i(TAG, lift.getIconPath());
+            }
         }
     }
 
