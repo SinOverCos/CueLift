@@ -5,6 +5,8 @@
 ## Design
 ## TODO
 
+- set minSdk and targetsSdk in manifest
+- generate key to sign https://developer.android.com/tools/publishing/app-signing.html
 - Change ListSeparator's length
 - =======================
 - Remove entries from any table

@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="me.tanwang.cuelift">
 
+    <!-- Warning says not used but looks like Google's instructions wants it to be specified -->
+    <uses-sdk android:minSdkVersion="15"
+          android:targetSdkVersion="23" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
