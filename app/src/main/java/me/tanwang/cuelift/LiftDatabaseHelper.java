@@ -60,7 +60,7 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(LIFT_MAX_WEIGHT, lift.getMaxWeight());
         contentValues.put(LIFT_MAX_VOL, lift.getMaxVolume());
         contentValues.put(LIFT_ICON, lift.getIconPath());
-        Log.i(TAG, "lift icon path: " + lift.getIconPath());
+        //Log.i(TAG, "lift icon path: " + lift.getIconPath());
         return getWritableDatabase().update(TABLE_LIFT, contentValues, "_id=" + lift.getId(), null);
     }
 
@@ -186,9 +186,9 @@ public class LiftDatabaseHelper extends SQLiteOpenHelper {
         String createLiftTableSql = "create table " + TABLE_LIFT + " (" + LIFT_ID + " integer primary key autoincrement, " + LIFT_NAME + " varchar(255), " + LIFT_MAX_WEIGHT + " integer, " + LIFT_MAX_VOL + " integer, " + LIFT_ICON + " varchar(1000))";
         String createSetTableSql = "create table " + TABLE_SET + " (" + SET_ID + " integer primary key autoincrement, " + SET_DATE + " integer, " + SET_REPS + " integer, " + SET_WEIGHT + " integer, " + SET_LIFT_ID + " integer references " + TABLE_LIFT + "(" + LIFT_ID + "))";
         String createCueTableSql = "create table " + TABLE_CUE + " (" + CUE_ID + " integer primary key autoincrement, " + CUE_HINT + " varchar(255), " + CUE_LIFT_ID + " integer references " + TABLE_LIFT + "(" + LIFT_ID + "))";
-        Log.i(TAG, "Creating DB: " + createLiftTableSql);
-        Log.i(TAG, "Creating DB: " + createSetTableSql);
-        Log.i(TAG, "Creating DB: " + createCueTableSql);
+        //Log.i(TAG, "Creating DB: " + createLiftTableSql);
+        //Log.i(TAG, "Creating DB: " + createSetTableSql);
+        //Log.i(TAG, "Creating DB: " + createCueTableSql);
         database.execSQL(createLiftTableSql);
         database.execSQL(createSetTableSql);
         database.execSQL(createCueTableSql);

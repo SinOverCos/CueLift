@@ -32,7 +32,7 @@ public class LiftPagerActivity extends AppCompatActivity implements LiftFragment
 
     public void updateLift() {
         if (viewPager == null || viewPager.getAdapter() == null) {
-            Log.i(TAG, "viewPager or viewPager's adapter is null, probably not ready yet, so returning");
+            //Log.i(TAG, "viewPager or viewPager's adapter is null, probably not ready yet, so returning");
             return;
         }
 
@@ -46,7 +46,7 @@ public class LiftPagerActivity extends AppCompatActivity implements LiftFragment
         if (id == LiftListFragment.ID_LOAD_LIFTS) {
             return new LiftListCursorLoader(this);
         } else {
-            Log.e(TAG, "UNRECOGNIZED ID FOR LOAD REQUEST");
+            //Log.e(TAG, "UNRECOGNIZED ID FOR LOAD REQUEST");
             return null;
         }
     }
@@ -77,7 +77,7 @@ public class LiftPagerActivity extends AppCompatActivity implements LiftFragment
                     Lift lift = liftCursor.getLift();
                     setTitle(lift.getDisplayName());
                 } else {
-                    Log.e(TAG, "(OnPageChangeListener) Cursor moved out of bounds to" + position);
+                    //Log.e(TAG, "(OnPageChangeListener) Cursor moved out of bounds to" + position);
                 }
             }
         });
@@ -106,7 +106,7 @@ public class LiftPagerActivity extends AppCompatActivity implements LiftFragment
                 LiftFragment liftFragment = LiftFragment.newInstance(lift);
                 return liftFragment;
             } else {
-                Log.e(TAG, "(FragmentStatePagerAdapter) Cursor moved out of bounds to" + position);
+                //Log.e(TAG, "(FragmentStatePagerAdapter) Cursor moved out of bounds to" + position);
                 return null;
             }
         }

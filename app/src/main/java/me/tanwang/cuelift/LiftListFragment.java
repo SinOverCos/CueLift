@@ -46,9 +46,9 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
     @Override
     public void onAttach(Context hostActivity) {
         super.onAttach(hostActivity);
-        Log.i(TAG, "onAttach(Context) called");
+        //Log.i(TAG, "onAttach(Context) called");
         callbacks = (LiftLiftFragmentCallbacks) hostActivity;
-        Log.i(TAG, "Callbacks added through onAttach(Context)");
+        //Log.i(TAG, "Callbacks added through onAttach(Context)");
     }
     */
 
@@ -56,8 +56,8 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
     @SuppressWarnings("deprecation")
     public void onAttach(Activity hostActivity) {
         super.onAttach(hostActivity);
-        Log.i(TAG, "onAttach(Activity) called");
-        Log.i(TAG, "Callbacks added through onAttach(Activity)");
+        //Log.i(TAG, "onAttach(Activity) called");
+        //Log.i(TAG, "Callbacks added through onAttach(Activity)");
         callbacks = (LiftLiftFragmentCallbacks) hostActivity;
     }
 
@@ -109,7 +109,7 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
     @Override
     public void onListItemClick(ListView listView, View view, int position, long id) {
         // id is given by cursor adapter since table in db has "_id" column
-        Log.i(TAG, "Lift at position " + position + " selected with id = " + id);
+        //Log.i(TAG, "Lift at position " + position + " selected with id = " + id);
         liftCursor.moveToPosition(position);
         callbacks.onLiftSelected(liftCursor.getLift());
     }
@@ -121,7 +121,7 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
         if (id == ID_LOAD_LIFTS) {
             return new LiftListCursorLoader(getActivity());
         } else {
-            Log.e(TAG, "UNRECOGNIZED ID FOR LOAD REQUEST");
+            //Log.e(TAG, "UNRECOGNIZED ID FOR LOAD REQUEST");
             return null;
         }
     }
@@ -166,10 +166,10 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
             liftDetailTextView.setText(detail);
 
             if (lift.getIconPath() != null) {
-                Log.i(TAG, lift.getIconPath());
+                //Log.i(TAG, lift.getIconPath());
                 liftIconImageButton.setImageURI(Uri.parse(lift.getIconPath()));
             } else {
-                Log.i(TAG, lift.getIconPath());
+                //Log.i(TAG, lift.getIconPath());
             }
         }
     }

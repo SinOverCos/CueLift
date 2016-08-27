@@ -42,7 +42,7 @@ public class LiftListActivity extends AppCompatActivity implements LiftListFragm
 
     @Override
     public void onLiftSelected(Lift lift) {
-        Log.i(TAG, lift.toString());
+        //Log.i(TAG, lift.toString());
         Intent intent = new Intent(this, LiftPagerActivity.class);
         intent.putExtra(Lift.EXTRA_LIFT, lift);
         startActivity(intent);
