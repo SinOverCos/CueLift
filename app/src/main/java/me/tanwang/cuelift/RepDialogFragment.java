@@ -24,7 +24,7 @@ public class RepDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setReps = getArguments().getInt(SET_REPS, -1);
         if (setReps == -1) {
-            Log.e(TAG, "No reps supplied! Setting to 0");
+            //Log.e(TAG, "No reps supplied! Setting to 0");
             setReps = 0;
         }
 

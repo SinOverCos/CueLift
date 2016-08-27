@@ -94,7 +94,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     }
 
     public static LiftFragment newInstance(Lift lift) {
-        Log.i(TAG, "Creating new LiftFragment with lift: " + lift.toString());
+        //Log.i(TAG, "Creating new LiftFragment with lift: " + lift.toString());
         Bundle args = new Bundle();
         args.putSerializable(Lift.EXTRA_LIFT, lift);
         LiftFragment liftFragment = new LiftFragment();
@@ -108,7 +108,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onAttach(Context hostActivity) {
         super.onAttach(hostActivity);
         callbacks = (LiftFragmentCallbacks) hostActivity;
-        Log.i(TAG, "Callbacks added through onAttach(Context)");
+        //Log.i(TAG, "Callbacks added through onAttach(Context)");
     }
     */
 
@@ -116,8 +116,8 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     @SuppressWarnings("deprecation")
     public void onAttach(Activity hostActivity) {
         super.onAttach(hostActivity);
-        Log.i(TAG, "onAttach(Activity) called");
-        Log.i(TAG, "Callbacks added through onAttach(Activity)");
+        //Log.i(TAG, "onAttach(Activity) called");
+        //Log.i(TAG, "Callbacks added through onAttach(Activity)");
         callbacks = (LiftFragmentCallbacks) hostActivity;
         liftManager = LiftManager.get(hostActivity.getApplicationContext());
     }
@@ -146,13 +146,13 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
     private int findRepsFromText(String text) {
         String[] split = text.split(" ");
         if (split.length != 2) {
-            Log.e(TAG, "Either text is bad, or failed to split properly: " + text);
+            //Log.e(TAG, "Either text is bad, or failed to split properly: " + text);
             return 0;
         }
         try {
             return Integer.parseInt(split[0]);
         } catch (NumberFormatException e) {
-            Log.e(TAG, "Failed to parse: " + split[0]);
+            //Log.e(TAG, "Failed to parse: " + split[0]);
             return 0;
         }
     }
@@ -229,10 +229,10 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         volumePrTextView = (TextView) view.findViewById(R.id.lift_pr_volume_text_view);
 
         if (lift.getIconPath() != null) {
-            Log.i(TAG, "lift has a source: " + lift.getIconPath());
+            //Log.i(TAG, "lift has a source: " + lift.getIconPath());
             liftIconImageButton.setImageURI(Uri.parse(lift.getIconPath()));
         } else {
-            Log.i(TAG, "lift has no source: " + lift.getIconPath());
+            //Log.i(TAG, "lift has no source: " + lift.getIconPath());
         }
         liftIconImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -338,7 +338,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         } else if(requestCode == REQUEST_REPS) {
             int reps = data.getIntExtra(RepDialogFragment.SET_REPS, -1);
             if (reps == -1) {
-                Log.e(TAG, "No reps received from NumberPicker!");
+                //Log.e(TAG, "No reps received from NumberPicker!");
                 reps = 0;
             }
             String repsText = String.format(getResources().getString(R.string.x_reps), reps);
@@ -347,11 +347,11 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
             if (resultCode == Activity.RESULT_OK) {
                 Uri uri = data.getData();
                 if (Build.VERSION.SDK_INT >= 19) {
-                    Log.i(TAG, "Requesting persistable URI");
+                    //Log.i(TAG, "Requesting persistable URI");
                     final int takeFlags = data.getFlags() & Intent.FLAG_GRANT_READ_URI_PERMISSION;
                     getActivity().getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 }
-                Log.d(TAG, "File Uri: " + uri.toString());
+                //Log.d(TAG, "File Uri: " + uri.toString());
                 lift.setIconPath(uri.toString());
                 liftIconImageButton.setImageURI(uri);
             }
@@ -446,12 +446,12 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         long liftId;
         if (id == ID_LOAD_CUES) {
             liftId = args.getLong(CUE_LIFT_ID, -1);
-            if (liftId == -1) Log.e(TAG, "LIFT'S LIFT ID CAME BACK AS -1 (CUE_LIFT_ID)");
+            //if (liftId == -1) Log.e(TAG, "LIFT'S LIFT ID CAME BACK AS -1 (CUE_LIFT_ID)");
         } else if (id == ID_LOAD_SETS || id == ID_RELOAD_SETS) {
             liftId = args.getLong(SET_LIFT_ID, -1);
-            if (liftId == -1) Log.e(TAG, "LIFT'S LIFT ID CAME BACK AS -1 (SET_LIFT_ID)");
+            //if (liftId == -1) Log.e(TAG, "LIFT'S LIFT ID CAME BACK AS -1 (SET_LIFT_ID)");
         } else {
-            Log.e(TAG, "UNRECOGNIZED ID FOR LOAD REQUEST");
+            //Log.e(TAG, "UNRECOGNIZED ID FOR LOAD REQUEST");
             return null;
         }
 
@@ -556,7 +556,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         }
 
         if (setCursor.isAfterLast()) {
-            Log.i(TAG, "No sets from previous day found");
+            //Log.i(TAG, "No sets from previous day found");
             return;
         }
 
@@ -592,7 +592,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
             setCursor = (LiftDatabaseHelper.SetCursor) cursor;
             updatePrs();
         } else {
-            Log.e(TAG, "Unrecognized loader ID: " + loaderId);
+            //Log.e(TAG, "Unrecognized loader ID: " + loaderId);
         }
 
         addCueEditText.clearFocus();
