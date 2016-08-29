@@ -5,7 +5,6 @@
 ## Design
 ## TODO
 
-- Support custom pictures for lifts
 - Change ListSeparator's length
 - =======================
 - Remove entries from any table
