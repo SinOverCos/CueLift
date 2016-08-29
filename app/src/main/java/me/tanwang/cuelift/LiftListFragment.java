@@ -168,8 +168,6 @@ public class LiftListFragment extends ListFragment implements LoaderManager.Load
             if (lift.getIconPath() != null) {
                 //Log.i(TAG, lift.getIconPath());
                 liftIconImageButton.setImageURI(Uri.parse(lift.getIconPath()));
-            } else {
-                //Log.i(TAG, lift.getIconPath());
             }
         }
     }
