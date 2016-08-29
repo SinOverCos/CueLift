@@ -174,7 +174,7 @@ public class LiftFragment extends Fragment implements LoaderManager.LoaderCallba
         } else {
             intent = new Intent(Intent.ACTION_GET_CONTENT); // action get content is for 18-
         }
-        intent.setType("image/png");
+        intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true); // not relevant probs
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
